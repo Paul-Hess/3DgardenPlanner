@@ -73,4 +73,10 @@ public class PlantTest {
   	Timestamp testTimestamp = new Timestamp(new Date().getTime());
   	assertEquals(testTimestamp.getHours(), testPlant.getCreatedAt().getHours());
   }
+
+  @Test 
+  public void equalsOverride_returnsTrueifInstancesAreTheSame_true() {
+  	Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", 1);
+  	assertTrue(testPlant.equals(testPlant2));
+  }
 }

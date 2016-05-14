@@ -28,7 +28,23 @@ public class Plant {
 		this.user_id = user_id;
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updated_at = new Timestamp(new Date().getTime());
+	}
 
+	@Override public boolean equals(Object otherPlant) {
+		if(!(otherPlant instanceof Plant)) {
+			return false;
+		} else {
+			Plant newPlant = (Plant) otherPlant;
+			return newPlant.getName().equals(this.getName()) &&
+			newPlant.getLatinName().equals(this.getLatinName()) && 
+			newPlant.getZone().equals(this.getZone()) && 
+			newPlant.getWidth() == this.getWidth() &&
+			newPlant.getHeight() == this.getHeight() &&
+			newPlant.getSeason().equals(this.getSeason()) &&
+			newPlant.getIcon().equals(this.getIcon()) &&
+			newPlant.getId() == this.getId() &&
+			newPlant.getUserId() == this.getUserId();
+		}
 	}
 
 	// getters
@@ -76,6 +92,11 @@ public class Plant {
 	public Timestamp getUpdatedAt() {
 		return this.updated_at;
 	}
+
+	// create 
+	// read 
+	// update 
+	// delete
 
 
 
