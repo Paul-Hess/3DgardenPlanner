@@ -69,4 +69,11 @@ public class UserTest {
 		assertTrue(testUser.equals(savedUser));
 	}
 
+	@Test 
+	public void findById_returnsSearchedForUser_User() {
+		testUser.save();
+		User foundUser = User.findById(testUser.getId());
+		assertTrue(testUser.equals(foundUser));
+	}
+
 }
