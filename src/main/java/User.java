@@ -102,6 +102,100 @@ public class User {
 				.executeAndFetchFirst(User.class);
 		}
 	}
+
 // update
+
+	public String updateEmail(String oldEmail, String plain_password, String newEmail) {
+		String  error = "Error in updating, either the input email or password did not match";
+		if(oldEmail.equals(this.getEmail())) {
+			String hashed = getHashedPassword(oldEmail);
+			if(BCrypt.checkpw(plain_password, hashed) && oldEmail.equals(this.email)) {
+				try(Connection con = DB.sql2o.open()) {
+					String update = "UPDATE users SET email=:newEmail, updated_at=:update WHERE email=:oldEmail AND id=:id;";
+					con.createQuery(update)
+						.addParameter("oldEmail", this.email)
+						.addParameter("newEmail", newEmail)
+						.addParameter("id", this.id)
+						.addParameter("update", new Timestamp(new Date().getTime()))
+						.executeUpdate();
+						String success = "success";
+						return success;
+				} 
+			} else {
+					return error;
+			}
+		} else {
+			return error;
+		}
+	}
+
+	public String updateName(String userEmail, String plain_password, String newName) {
+		String error = "Error in updating, either the input email or password did not match";
+		if(userEmail.equals(this.getEmail())) {
+			String hashed = getHashedPassword(userEmail);
+			if(BCrypt.checkpw(plain_password, hashed)) {
+				try(Connection con = DB.sql2o.open()) {
+					String update = "UPDATE users SET user_name=:newName, updated_at=:update WHERE email=:email AND id=:id;";
+					con.createQuery(update)
+						.addParameter("email", this.email)
+						.addParameter("newName", newName)
+						.addParameter("update", new Timestamp(new Date().getTime()))
+						.addParameter("id", this.id)
+						.executeUpdate();
+						String success = "success";
+						return success;
+				} 
+			} else {
+				return error;
+			}
+		} else {
+			return error;
+		}
+	}
+
+	public String updatePassword(String userEmail, String old_password, String newPassword) {
+		String error = "Error in updating, either the input email or password did not match";
+		if(userEmail.equals(this.getEmail())) {
+			String hashed = getHashedPassword(userEmail);
+			if(BCrypt.checkpw(old_password, hashed)) {
+				try(Connection con = DB.sql2o.open()) {
+					String update = "UPDATE users SET password=:newHashed, updated_at=:update WHERE email=:email AND id=:id;";
+					con.createQuery(update)
+						.addParameter("newHashed", BCrypt.hashpw(newPassword, BCrypt.gensalt(12)))
+						.addParameter("email", this.email)
+						.addParameter("update", new Timestamp(new Date().getTime()))
+						.addParameter("id", this.id)
+						.executeUpdate();
+						String success = "success";
+						return success;
+					}		
+				} else {
+					return error;
+				}
+			} else {
+				return error;
+			}
+		}
 // delete
+
+	public String removeAccount(String userEmail, String plain_password) {
+		String error = "Error in updating, either the input email or password did not match";
+		if(userEmail.equals(this.getEmail())) {
+			String hashed = getHashedPassword(userEmail);
+			if(BCrypt.checkpw(plain_password, hashed)) {
+				try(Connection con = DB.sql2o.open()) {
+					String deleteUser = "DELETE FROM users WHERE id=:id;";
+					con.createQuery(deleteUser)
+						.addParameter("id", this.id)
+						.executeUpdate();
+						String success = "success";
+						return success;
+				} 
+			} else {
+				return error;
+			}
+		} else {
+			return error;
+		}
+	}	
 }

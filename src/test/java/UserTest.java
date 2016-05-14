@@ -83,5 +83,119 @@ public class UserTest {
 		assertTrue(BCrypt.checkpw("F00bar#", hashed));
 	}
 
+	@Test 
+	public void updateEmail_setsNewEmailWhenUserValidated_String() {
+		testUser.save();
+		String success = testUser.updateEmail("user@example.com", "F00bar#", "user2@example.com");
+		User updatedUser = User.findById(testUser.getId());
+		assertEquals("success", success);
+		assertEquals(updatedUser.getEmail(), "user2@example.com");
+	}
+
+	@Test 
+	public void updateEmail_updatesTimstampWhenSetsNewEmailWhenUserValidated_String() {
+		testUser.save();
+		String success = testUser.updateEmail("user@example.com", "F00bar#", "user2@example.com");
+		User updatedUser = User.findById(testUser.getId());
+		Timestamp testTimestamp = new Timestamp(new Date().getTime());
+		assertEquals(testTimestamp.getHours(), updatedUser.getUpdatedAt().getHours());
+	}
+
+	@Test 
+	public void updateEmail_throwsErrorMessageIfPasswordIsWrong_String() {
+		testUser.save();
+		String error = testUser.updateEmail("user@example.com", "F00bar", "user2@example.com");
+		User notUpdatedUser = User.findById(testUser.getId());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(notUpdatedUser.getEmail(), "user@example.com");
+	}
+
+	@Test 
+	public void updateEmail_throwsErrorMessageIfEmailIsWrong_String() {
+		testUser.save();
+		String error = testUser.updateEmail("user@exampl.com", "F00bar#", "user2@example.com");
+		User notUpdatedUser = User.findById(testUser.getId());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(notUpdatedUser.getEmail(), "user@example.com");
+	}
+
+	@Test 
+	public void updateName_setsNewUserNameWhenUserValidated_String() {
+		testUser.save();
+		String success = testUser.updateName("user@example.com", "F00bar#", "newUserName");
+		User updatedUser = User.findById(testUser.getId());
+		assertEquals("success", success);
+		assertEquals(updatedUser.getName(), "newUserName");
+	}
+
+	@Test 
+	public void updateName_newTimestampWhenSetsNewUserNameWhenUserValidated_String() {
+		testUser.save();
+		String success = testUser.updateName("user@example.com", "F00bar#", "newUserName");
+		User updatedUser = User.findById(testUser.getId());
+		Timestamp testTimestamp = new Timestamp(new Date().getTime());
+		assertEquals(testTimestamp.getHours(), updatedUser.getUpdatedAt().getHours());
+	}
+
+	@Test 
+	public void updateName_throwsErrorMessageIfPasswordIsWrong_String() {
+		testUser.save();
+		String error = testUser.updateName("user@example.com", "F00bar", "newUserName");
+		User notUpdatedUser = User.findById(testUser.getId());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(notUpdatedUser.getName(), "userName");
+	}
+
+	@Test 
+	public void updateName_throwsErrorMessageIfEmailIsWrong_String() {
+		testUser.save();
+		String error = testUser.updateName("user@exampl.com", "F00bar#", "newUserName");
+		User notUpdatedUser = User.findById(testUser.getId());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(notUpdatedUser.getName(), "userName");
+	}
+
+	@Test 
+	public void updatePassword_setsNewUserPasswordForValidatedUser_String() {
+		testUser.save();
+		String success = testUser.updatePassword("user@example.com", "F00bar#", "newP@55word");
+		String hashed = testUser.getHashedPassword(testUser.getEmail());
+		assertEquals("success", success);
+		assertTrue(BCrypt.checkpw("newP@55word", hashed));
+	}
+
+	@Test 
+	public void updatePassword_throwsErrorIfPasswordIsWrong_String() {
+		testUser.save();
+		String error = testUser.updatePassword("user@example.com", "F00bar", "newP@55word");
+		String hashed = testUser.getHashedPassword(testUser.getEmail());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertTrue(BCrypt.checkpw("F00bar#", hashed));
+	}
+
+	@Test 
+	public void updatePassword_throwsErrorIfEmailIsWrong_String() {
+		testUser.save();
+		String error = testUser.updatePassword("user@exampl.com", "F00bar#", "newP@55word");
+		String hashed = testUser.getHashedPassword(testUser.getEmail());
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertTrue(BCrypt.checkpw("F00bar#", hashed));
+	}
+
+	@Test 
+	public void updatePassword_updatesTimstampWhenSetsNewPasswordForUser_Timestamp() {
+		testUser.save();
+		testUser.updatePassword("user@example.com", "F00bar#", "newP@55word");
+		User updatedUser = User.findById(testUser.getId());
+		Timestamp testTimestamp = new Timestamp(new Date().getTime());
+		assertEquals(testTimestamp.getHours(), updatedUser.getUpdatedAt().getHours());
+	}
+
+	@Test 
+	public void removeAccount_deletesUserFromDatabase_0() {
+		testUser.save();
+		testUser.removeAccount("user@example.com", "F00bar#");
+		assertEquals(0, User.all().size());
+	}
 
 }
