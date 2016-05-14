@@ -93,7 +93,7 @@ public class UserTest {
 	}
 
 	@Test 
-	public void updateEmail_updatesTimstampWhenSetsNewEmailWhenUserValidated_String() {
+	public void updateEmail_updatesTimstampWhenSetsNewEmail_Timestamp() {
 		testUser.save();
 		String success = testUser.updateEmail("user@example.com", "F00bar#", "user2@example.com");
 		User updatedUser = User.findById(testUser.getId());
@@ -129,7 +129,7 @@ public class UserTest {
 	}
 
 	@Test 
-	public void updateName_newTimestampWhenSetsNewUserNameWhenUserValidated_String() {
+	public void updateName_newTimestampWhenSetsNewUserName_Timestamp() {
 		testUser.save();
 		String success = testUser.updateName("user@example.com", "F00bar#", "newUserName");
 		User updatedUser = User.findById(testUser.getId());
@@ -194,8 +194,25 @@ public class UserTest {
 	@Test 
 	public void removeAccount_deletesUserFromDatabase_0() {
 		testUser.save();
-		testUser.removeAccount("user@example.com", "F00bar#");
+		String success = testUser.removeAccount("user@example.com", "F00bar#");
+		assertEquals("success", success);
 		assertEquals(0, User.all().size());
+	}
+
+	@Test 
+	public void removeAccount_throwsErrorIfPasswordIsWrong_String() {
+		testUser.save();
+		String error = testUser.removeAccount("user@example.com", "F00bar");
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(1, User.all().size());
+	}
+
+	@Test 
+	public void removeAccount_throwsErrorIfEmailIsWrong_String() {
+		testUser.save();
+		String error = testUser.removeAccount("user@exampl.com", "F00bar#");
+		assertEquals("Error in updating, either the input email or password did not match", error);
+		assertEquals(1, User.all().size());
 	}
 
 }
