@@ -124,6 +124,52 @@ public class Plant {
 				.executeAndFetch(Plant.class);
 		}
 	}
+
+	public static Plant findById(int id ) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM plants WHERE id=:id;";
+			return con.createQuery(sql)
+				.addParameter("id", id)
+				.executeAndFetchFirst(Plant.class);
+		}
+	}
+
+	public static List<Plant> findByName(String searchQuery) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM plants WHERE lower(plant_name) LIKE :searchQuery;";
+			return con.createQuery(sql)
+				.addParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%" )
+				.executeAndFetch(Plant.class);
+		}
+	}
+
+	public static List<Plant> findByZone(String zone) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM plants WHERE usda_zone=:zone;";
+				return con.createQuery(sql)
+					.addParameter("zone", zone.toLowerCase())
+					.executeAndFetch(Plant.class);
+		}
+	}
+
+	public static List<Plant> findByLatinName(String searchQuery) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM plants WHERE lower(latin_name) LIKE :searchQuery;";
+			return con.createQuery(sql)
+				.addParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%" )
+				.executeAndFetch(Plant.class);
+		}
+	}
+
+	public static List<Plant> findBySeason(String searchQuery) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM plants WHERE lower(active_season) LIKE :searchQuery;";
+			return con.createQuery(sql)
+				.addParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%" )
+				.executeAndFetch(Plant.class);
+		}	
+	}
+
 	// update 
 	// delete
 

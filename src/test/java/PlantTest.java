@@ -91,4 +91,46 @@ public class PlantTest {
   	Plant savedPlant = Plant.all().get(0);
   	assertTrue(savedPlant.equals(testPlant));
   }
+
+  @Test 
+  public void findById_findsPlantByInputId_Plant() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findById(testPlant.getId());
+  	assertTrue(testPlant.equals(foundPlant));
+  }
+
+  @Test 
+  public void save_assignsIdtoObject_true() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findById(testPlant.getId());
+  	assertEquals(testPlant.getId(), foundPlant.getId());
+  }
+
+  @Test 
+  public void findByName_returnsSearchedForPlant_PlantList() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findByName("laN").get(0);
+  	assertTrue(foundPlant.equals(testPlant));
+  }
+
+  @Test 
+  public void findByZone_returnsSearchedForPlant_PlantList() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findByZone("weSt 3").get(0);
+  	assertTrue(foundPlant.equals(testPlant));
+  }
+
+  @Test 
+  public void findByLatinName_returnsSearchedForPlant_PlantList() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findByLatinName("plAntu").get(0);
+  	assertTrue(foundPlant.equals(testPlant));
+  }
+
+  @Test 
+  public void findBySeason_returnsSearchedForPlant_PlantList() {
+  	testPlant.save();
+  	Plant foundPlant = Plant.findBySeason("Summ").get(0);
+  	assertTrue(foundPlant.equals(testPlant));
+  }
 }
