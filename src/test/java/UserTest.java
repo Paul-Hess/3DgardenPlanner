@@ -5,13 +5,13 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import java.sql.Timestamp;
 import java.util.Date;
+import org.postgresql.util.PSQLException;
 
 
 public class UserTest {
 	private final User testUser = new User("userName", "user@example.com", "F00bar#");
-
 	@Rule
-  public DatabaseRule database = new DatabaseRule();
+  public DatabaseRule database = new DatabaseRule();	
 
   @Test 
 	public void User_instantiatesCorrectly_true() {
@@ -73,6 +73,13 @@ public class UserTest {
 	public void findById_returnsSearchedForUser_User() {
 		testUser.save();
 		User foundUser = User.findById(testUser.getId());
+		assertTrue(testUser.equals(foundUser));
+	}
+
+	@Test 
+	public void findByEmail_returnsSearchedForUser_User() {
+		testUser.save();
+		User foundUser = User.findByEmail(testUser.getEmail());
 		assertTrue(testUser.equals(foundUser));
 	}
 
@@ -213,6 +220,36 @@ public class UserTest {
 		String error = testUser.removeAccount("user@exampl.com", "F00bar#");
 		assertEquals("Error in updating, either the input email or password did not match", error);
 		assertEquals(1, User.all().size());
+	}
+
+	@Test 
+	public void logIn_checksAuthorizationOfUserForAccount_true() {
+		testUser.save();
+		boolean isValidated = User.logIn("user@example.com", "F00bar#");
+		assertTrue(isValidated);
+	}
+
+	@Test 
+	public void logIn_returnsFalseForWrongPassword_false() {
+		testUser.save();
+		boolean isValidated = User.logIn("user@example.com", "F00bar");
+		assertFalse(isValidated);
+	}
+
+	@Test 
+	public void logIn_returnsFalseForWrongEmail_false() {
+		testUser.save();
+		boolean isValidated = User.logIn("user@example.org", "F00bar#");
+		assertFalse(isValidated);
+	}
+
+	@Test 
+	public void logIn_returnsFalseForMisMatchedPasswordAndEmail_false() {
+		testUser.save();
+		User testUser2 = new User("userName2", "user2@example.com", "F00b@r#");
+		testUser2.save();
+		boolean isValidated = User.logIn("user@exemple.com", "F00b@r#");
+		assertFalse(isValidated);
 	}
 
 }

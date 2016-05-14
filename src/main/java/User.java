@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.Date;
+import org.postgresql.util.PSQLException;
 
 
 public class User {
@@ -102,6 +103,29 @@ public class User {
 				.executeAndFetchFirst(User.class);
 		}
 	}
+
+	public static User findByEmail(String userEmail) {
+		String emailSearch = "SELECT * FROM users WHERE email=:email;";
+		try(Connection con = DB.sql2o.open()) {
+			return con.createQuery(emailSearch)
+			.addParameter("email", userEmail)
+			.executeAndFetchFirst(User.class);
+		}
+	}
+
+	public static boolean logIn(String userEmail, String plain_password) {
+			if(User.findByEmail(userEmail) instanceof User) {
+				String hashed = getHashedPassword(userEmail);
+				if(BCrypt.checkpw(plain_password, hashed)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}	
+	}
+
 
 // update
 
