@@ -76,4 +76,12 @@ public class UserTest {
 		assertTrue(testUser.equals(foundUser));
 	}
 
+	@Test 
+	public void getHashedPassword_returnsHashedPassword_String() {
+		testUser.save();
+		String hashed = User.getHashedPassword(testUser.getEmail());
+		assertTrue(BCrypt.checkpw("F00bar#", hashed));
+	}
+
+
 }

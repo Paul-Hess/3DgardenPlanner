@@ -31,7 +31,7 @@ public class User {
 	public User(String user_name, String email, String password) {
 		this.user_name = user_name;
 		this.email = email;
-		this.password = password;
+		this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
 		this.created_at =  new Timestamp(new Date().getTime());
 		this.updated_at = new Timestamp(new Date().getTime());
 	}
@@ -56,6 +56,16 @@ public class User {
 
 	public Timestamp getUpdatedAt() {
 		return this.updated_at;
+	}
+
+	public static String getHashedPassword(String email) {
+		String sql = "SELECT password FROM users WHERE email=:email;";
+		try(Connection con = DB.sql2o.open()) {
+			User checkUser = con.createQuery(sql)
+				.addParameter("email", email)
+				.executeAndFetchFirst(User.class);
+				return checkUser.password;
+			}
 	}
 
 // create
