@@ -113,7 +113,7 @@ public class User {
 		}
 	}
 
-	public static boolean logIn(String userEmail, String plain_password) {
+	public static boolean checkUserAuth(String userEmail, String plain_password) {
 			if(User.findByEmail(userEmail) instanceof User) {
 				String hashed = getHashedPassword(userEmail);
 				if(BCrypt.checkpw(plain_password, hashed)) {

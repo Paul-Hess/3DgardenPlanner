@@ -5,7 +5,6 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import java.sql.Timestamp;
 import java.util.Date;
-import org.postgresql.util.PSQLException;
 
 
 public class UserTest {
@@ -223,33 +222,49 @@ public class UserTest {
 	}
 
 	@Test 
-	public void logIn_checksAuthorizationOfUserForAccount_true() {
+	public void checkUserAuth_checksAuthorizationOfUserForAccount_true() {
 		testUser.save();
-		boolean isValidated = User.logIn("user@example.com", "F00bar#");
+		boolean isValidated = User.checkUserAuth("user@example.com", "F00bar#");
 		assertTrue(isValidated);
 	}
 
 	@Test 
-	public void logIn_returnsFalseForWrongPassword_false() {
+	public void checkUserAuth_returnsFalseForWrongPassword_false() {
 		testUser.save();
-		boolean isValidated = User.logIn("user@example.com", "F00bar");
+		boolean isValidated = User.checkUserAuth("user@example.com", "F00bar");
 		assertFalse(isValidated);
 	}
 
 	@Test 
-	public void logIn_returnsFalseForWrongEmail_false() {
+	public void checkUserAuth_returnsFalseForWrongEmail_false() {
 		testUser.save();
-		boolean isValidated = User.logIn("user@example.org", "F00bar#");
+		boolean isValidated = User.checkUserAuth("user@example.org", "F00bar#");
 		assertFalse(isValidated);
 	}
 
 	@Test 
-	public void logIn_returnsFalseForMisMatchedPasswordAndEmail_false() {
+	public void checkUserAuth_returnsFalseForMisMatchedPasswordAndEmail_false() {
 		testUser.save();
 		User testUser2 = new User("userName2", "user2@example.com", "F00b@r#");
 		testUser2.save();
-		boolean isValidated = User.logIn("user@exemple.com", "F00b@r#");
+		boolean isValidated = User.checkUserAuth("user@exemple.com", "F00b@r#");
 		assertFalse(isValidated);
+	}
+
+	@Test 
+	public void checkUserAuth_functionsAfterPasswordUpdate_true() {
+		testUser.save();
+		testUser.updatePassword("user@example.com", "F00bar#", "newP@55word");
+		boolean isValidated = User.checkUserAuth("user@example.com", "newP@55word");
+		assertTrue(isValidated);
+	}
+
+	@Test 
+	public void checkUserAuth_functionsAfterEmailUpdate_true() {
+		testUser.save();
+		testUser.updateEmail("user@example.com", "F00bar#", "user2@example.com");
+		boolean isValidated = User.checkUserAuth("user2@example.com", "F00bar#");
+		assertTrue(isValidated);
 	}
 
 }
