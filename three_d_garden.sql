@@ -152,7 +152,8 @@ CREATE TABLE users (
     user_name character varying NOT NULL,
     email character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    password character varying NOT NULL
 );
 
 
@@ -256,7 +257,7 @@ SELECT pg_catalog.setval('plants_id_seq', 1, false);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: home
 --
 
-COPY users (id, user_name, email, created_at, updated_at) FROM stdin;
+COPY users (id, user_name, email, created_at, updated_at, password) FROM stdin;
 \.
 
 
