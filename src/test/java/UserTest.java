@@ -26,4 +26,10 @@ public class UserTest {
 		assertEquals(testUser.getName(), "userName");
 	}
 
+	@Test 
+	public void equalsOverride_returnsTrueIfInstancesMatch_true() {
+		User testUserTwo = new User("userName", "F00bar#");
+		assertTrue(testUser.equals(testUserTwo));
+	}
+
 }
