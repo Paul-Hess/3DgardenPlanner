@@ -16,4 +16,14 @@ public class UserTest {
 		assertTrue(testUser instanceof User);
 	}
 
+	@Test 
+	public void getId_returnsUserId_int() {
+		assertEquals(testUser.getId(), 0);
+	}
+
+	@Test 
+	public void getName_returnsUserName_String() {
+		assertEquals(testUser.getName(), "userName");
+	}
+
 }
