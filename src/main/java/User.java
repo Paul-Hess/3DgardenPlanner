@@ -50,6 +50,14 @@ public class User {
 		return this.email;
 	}
 
+	public Timestamp getCreatedAt() {
+		return this.created_at;
+	}
+
+	public Timestamp getUpdatedAt() {
+		return this.updated_at;
+	}
+
 // create
 
 	public void save() {

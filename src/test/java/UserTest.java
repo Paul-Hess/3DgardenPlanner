@@ -29,6 +29,18 @@ public class UserTest {
 	}
 
 	@Test 
+	public void getCreatedAt_returnsUserCreatedAt_Timestamp() {
+		Timestamp testTimestamp = new Timestamp(new Date().getTime());
+		assertEquals(testUser.getCreatedAt().getHours(), testTimestamp.getHours());
+	}
+
+	@Test 
+	public void getUpdatedAt_returnsUserUpdatedAt_Timestamp() {
+		Timestamp testTimestamp = new Timestamp(new Date().getTime());
+		assertEquals(testUser.getUpdatedAt().getHours(), testTimestamp.getHours());
+	}
+
+	@Test 
 	public void getEmail_returnsUserEmail_String() {
 		assertEquals(testUser.getEmail(), "user@example.com");
 	}
@@ -42,6 +54,12 @@ public class UserTest {
 	@Test 
 	public void all_insitializesAsEmptyList_0() {
 		assertEquals(User.all().size(), 0);
+	}
+
+	@Test 
+	public void all_shouldChangeByOne_1() {
+		testUser.save();
+		assertEquals(User.all().size(), 1);
 	}
 
 	@Test 
