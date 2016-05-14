@@ -94,7 +94,36 @@ public class Plant {
 	}
 
 	// create 
+
+	public void save() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "INSERT INTO plants (plant_name, latin_name, usda_zone, average_height, average_width, active_season, user_id, plant_icon_url, created_at, updated_at) VALUES (:plant_name, :latin_name, :usda_zone, :average_height, :average_width, :active_season, :user_id, :plant_icon_url, :created_at, :updated_at);";
+			this.id = (int) con.createQuery(sql, true)
+				.addParameter("plant_name", this.plant_name)
+				.addParameter("latin_name", this.latin_name)
+				.addParameter("usda_zone", this.usda_zone)
+				.addParameter("average_height", this.average_height)
+				.addParameter("average_width", this.average_width)
+				.addParameter("active_season", this.active_season)
+				.addParameter("user_id", this.user_id)
+				.addParameter("plant_icon_url", this.plant_icon_url)
+				.addParameter("created_at", this.created_at)
+				.addParameter("updated_at", this.updated_at)
+				.executeUpdate()
+				.getKey();
+		}
+	}
+
+
 	// read 
+
+	public static List<Plant> all() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT id, plant_name, latin_name, usda_zone, average_height, average_width, active_season, user_id, plant_icon_url, created_at, updated_at FROM plants;";
+			return con.createQuery(sql)
+				.executeAndFetch(Plant.class);
+		}
+	}
 	// update 
 	// delete
 
