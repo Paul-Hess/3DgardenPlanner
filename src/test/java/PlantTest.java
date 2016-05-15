@@ -10,7 +10,7 @@ public class PlantTest {
 	@Rule
   public DatabaseRule database = new DatabaseRule();	
 
-  private final Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", 1);
+  private final Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
 
   @Test 
   public void Plant_instantiatesCorrectly_true() {
@@ -54,7 +54,7 @@ public class PlantTest {
 
   @Test
   public void getUserId_returnsIdOfAssociatedUser_int() {
-  	assertEquals(testPlant.getUserId(), 1);
+  	assertEquals(testPlant.getUserId(), 0);
   }
 
   @Test 
@@ -76,7 +76,7 @@ public class PlantTest {
 
   @Test 
   public void equalsOverride_returnsTrueifInstancesAreTheSame_true() {
-  	Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", 1);
+  	Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
   	assertTrue(testPlant.equals(testPlant2));
   }
 
@@ -132,5 +132,21 @@ public class PlantTest {
   	testPlant.save();
   	Plant foundPlant = Plant.findBySeason("Summ").get(0);
   	assertTrue(foundPlant.equals(testPlant));
+  }
+
+  @Test 
+  public void update_setsNewValuesForPlantProperties_true() {
+  	testPlant.save();
+  	testPlant.update("plant name2", "plantae latinata", "west 5", 6, 4, "spring", "pathTo/plantimage2.jpg");
+  	Plant updatedPlant = Plant.findById(testPlant.getId());
+  	Timestamp testTimestamp = new Timestamp(new Date().getTime());
+  	assertEquals(updatedPlant.getName(), "plant name2");
+  	assertEquals(updatedPlant.getLatinName(), "plantae latinata");
+  	assertEquals(updatedPlant.getZone(), "west 5");
+  	assertEquals(updatedPlant.getHeight(), 6);
+  	assertEquals(updatedPlant.getWidth(), 4);
+  	assertEquals(updatedPlant.getSeason(), "spring");
+  	assertEquals(updatedPlant.getIcon(), "pathTo/plantimage2.jpg");
+  	assertEquals(testTimestamp.getMinutes(), updatedPlant.getUpdatedAt().getMinutes());
   }
 }

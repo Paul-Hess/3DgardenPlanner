@@ -17,7 +17,7 @@ public class Plant {
 	private String active_season;
 	private String plant_icon_url;
 
-	public Plant(String plant_name, String latin_name, String usda_zone, int average_height, int average_width, String active_season, String plant_icon_url, int user_id) {
+	public Plant(String plant_name, String latin_name, String usda_zone, int average_height, int average_width, String active_season, String plant_icon_url) {
 		this.plant_name = plant_name;
 		this.latin_name = latin_name;
 		this.usda_zone = usda_zone;
@@ -25,7 +25,6 @@ public class Plant {
 		this.average_width = average_width;
 		this.active_season = active_season;
 		this.plant_icon_url = plant_icon_url;
-		this.user_id = user_id;
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updated_at = new Timestamp(new Date().getTime());
 	}
@@ -97,7 +96,7 @@ public class Plant {
 
 	public void save() {
 		try(Connection con = DB.sql2o.open()) {
-			String sql = "INSERT INTO plants (plant_name, latin_name, usda_zone, average_height, average_width, active_season, user_id, plant_icon_url, created_at, updated_at) VALUES (:plant_name, :latin_name, :usda_zone, :average_height, :average_width, :active_season, :user_id, :plant_icon_url, :created_at, :updated_at);";
+			String sql = "INSERT INTO plants (plant_name, latin_name, usda_zone, average_height, average_width, active_season, plant_icon_url, created_at, updated_at) VALUES (:plant_name, :latin_name, :usda_zone, :average_height, :average_width, :active_season, :plant_icon_url, :created_at, :updated_at);";
 			this.id = (int) con.createQuery(sql, true)
 				.addParameter("plant_name", this.plant_name)
 				.addParameter("latin_name", this.latin_name)
@@ -105,7 +104,6 @@ public class Plant {
 				.addParameter("average_height", this.average_height)
 				.addParameter("average_width", this.average_width)
 				.addParameter("active_season", this.active_season)
-				.addParameter("user_id", this.user_id)
 				.addParameter("plant_icon_url", this.plant_icon_url)
 				.addParameter("created_at", this.created_at)
 				.addParameter("updated_at", this.updated_at)
@@ -171,6 +169,26 @@ public class Plant {
 	}
 
 	// update 
+
+	public void update(String new_name, String new_latin, String new_zone, int new_height, int new_width, String new_season, String new_url) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "UPDATE plants SET plant_name=:new_name, latin_name=:new_latin, usda_zone=:new_zone, average_height=:new_height, average_width=:new_width, active_season=:new_season, plant_icon_url=:new_url,  updated_at=:update;";
+			con.createQuery(sql)
+				.addParameter("new_name", new_name)
+				.addParameter("new_latin", new_latin)
+				.addParameter("new_zone", new_zone)
+				.addParameter("new_height", new_height)
+				.addParameter("new_width", new_width)
+				.addParameter("new_season", new_season)
+				.addParameter("new_url", new_url)
+				.addParameter("update", new Timestamp(new Date().getTime()))
+				.executeUpdate();
+		}
+
+		
+		
+
+	}
 	// delete
 
 
