@@ -5,6 +5,7 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 public class GardenTest {
 	@Rule
@@ -133,6 +134,23 @@ public class GardenTest {
     testGarden2.addPlant(testPlant3);
     testGarden2.addPlant(testPlant4);
     assertEquals(testGarden2.checkAvailableGround(), 0);
+  }
+
+  @Test 
+  public void findByArea_returnsPlantsOfAGivenSize() {
+    testGarden.save();
+    Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    Plant testPlant3 = new Plant("plant name", "plantus latinii", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    Plant testPlant4 = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant4.save();
+    testGarden.addPlant(testPlant2);
+    testGarden.addPlant(testPlant3);
+    testGarden.addPlant(testPlant4);
+    List<Plant> foundPlants = testGarden.findByAvailableGround(17);
+    Plant[] expected = {testPlant2, testPlant3};
+    assertArrayEquals(expected, foundPlants.toArray());
   }
 
 }

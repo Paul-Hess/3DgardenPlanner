@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 import org.sql2o.*;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -122,6 +123,18 @@ public class Garden {
 				.addParameter("id", this.id)
 				.executeAndFetch(Plant.class);
 		}
+	}
+
+
+	public List<Plant> findByAvailableGround(int availableSpace) {
+			double root = Math.sqrt(availableSpace);
+			try(Connection con = DB.sql2o.open()) {
+				String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id AND plants.average_width <= :availableSpace;";
+				return con.createQuery(joinQuery)
+					.addParameter("id", this.id)
+					.addParameter("availableSpace", root)
+					.executeAndFetch(Plant.class);
+			}
 	}
 
 	// update
