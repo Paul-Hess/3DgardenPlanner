@@ -21,6 +21,18 @@ public class Garden {
 		this.updated_at = new Timestamp(new Date().getTime());
 	}
 
+	@Override public boolean equals(Object otherGarden) {
+		if(!(otherGarden instanceof Garden)) {
+			return false;
+		} else {
+			Garden newGarden = (Garden) otherGarden;
+			return newGarden.getName().equals(this.getName()) &&
+			newGarden.getId() == this.getId() &&
+			newGarden.getLength() == this.getLength() && 
+			newGarden.getWidth() == this.getWidth();
+		}
+	}
+
 	// getters
 
 	public String getName() {

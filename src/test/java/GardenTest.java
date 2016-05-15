@@ -54,4 +54,11 @@ public class GardenTest {
     assertEquals(Garden.all().size(),0);
   }
 
+
+  @Test 
+  public void equals_returnsTrueWhenInstancesAreTheSame_true() {
+    Garden testGarden2 = new Garden("garden name", 8, 12, 1);
+    assertTrue(testGarden.equals(testGarden2));
+  }
+
 }
