@@ -17,6 +17,40 @@ public class Garden {
 		this.length = length;
 		this.width = width;
 		this.user_id = user_id;
+		this.created_at = new Timestamp(new Date().getTime());
+		this.updated_at = new Timestamp(new Date().getTime());
 	}
+
+	// getters
+
+	public String getName() {
+		return this.garden_name;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public int getLength() {
+		return this.length;
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public Timestamp getCreatedAt() {
+		return this.created_at;
+	}
+
+	public Timestamp getUpdatedAt() {
+		return this.updated_at;
+	}
+
+
+	// create
+	// read
+	// update
+	// delete
 
 }
