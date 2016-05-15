@@ -86,6 +86,16 @@ public class Garden {
 		}
 	}
 
+	public int checkAvailableGround() {
+		int area = this.getLength() * this.getWidth();
+		int currentSpace = area;
+		for(Plant plant : this.getPlants()) {
+			int plantArea = plant.getWidth() * plant.getWidth();
+			currentSpace = currentSpace - plantArea;
+		}
+		return currentSpace;
+	}
+
 	// read
 
 	public static List<Garden> all() {

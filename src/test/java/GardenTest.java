@@ -116,4 +116,23 @@ public class GardenTest {
     assertTrue(testGarden.getPlants().get(0).equals(testPlant));
   }
 
+  @Test 
+  public void checkAvailableGround_checksIfThereIsMoreGroundSpaceInTheGardenForPlants_false() {
+    Garden testGarden2 = new Garden("garden name", 4, 25, 1);
+    testGarden2.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    Plant testPlant3 = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    Plant testPlant4 = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant4.save();
+    testGarden2.addPlant(testPlant);
+    testGarden2.addPlant(testPlant2);
+    testGarden2.addPlant(testPlant3);
+    testGarden2.addPlant(testPlant4);
+    assertEquals(testGarden2.checkAvailableGround(), 0);
+  }
+
 }
