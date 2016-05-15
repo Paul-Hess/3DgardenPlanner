@@ -49,4 +49,9 @@ public class GardenTest {
   	assertEquals(testGarden.getId(), 0);
   }
 
+  @Test 
+  public void all_initializesAsEmptyList() {
+    assertEquals(Garden.all().size(),0);
+  }
+
 }

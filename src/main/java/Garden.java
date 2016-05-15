@@ -47,9 +47,18 @@ public class Garden {
 		return this.updated_at;
 	}
 
-
 	// create
+
+
 	// read
+
+	public static List<Garden> all() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT id, created_at, updated_at, garden_name, user_id, width, length FROM gardens;";
+			return con.createQuery(sql)
+				.executeAndFetch(Garden.class);
+		}
+	}
 	// update
 	// delete
 
