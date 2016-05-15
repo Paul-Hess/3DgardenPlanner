@@ -61,4 +61,11 @@ public class GardenTest {
     assertTrue(testGarden.equals(testGarden2));
   }
 
+  @Test 
+  public void save_savesInstanceOfGarden_true() {
+    testGarden.save();
+    Garden savedGarden = Garden.all().get(0);
+    assertTrue(savedGarden.equals(testGarden));
+  }
+
 }

@@ -61,6 +61,20 @@ public class Garden {
 
 	// create
 
+	public void save() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "INSERT INTO gardens (created_at, updated_at, garden_name, user_id, width, length) VALUES (:created_at, :updated_at, :garden_name, :user_id, :width, :length);";
+			this.id = (int) con.createQuery(sql, true)
+				.addParameter("created_at", this.created_at)
+				.addParameter("updated_at", this.updated_at)
+				.addParameter("garden_name", this.garden_name)
+				.addParameter("user_id", this.user_id)
+				.addParameter("width", this.width)
+				.addParameter("length", this.length)
+				.executeUpdate()
+				.getKey();
+		}
+	}
 
 	// read
 
