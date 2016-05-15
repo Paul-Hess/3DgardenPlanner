@@ -39,7 +39,8 @@ CREATE TABLE gardens (
     updated_at timestamp without time zone NOT NULL,
     user_id integer NOT NULL,
     length integer NOT NULL,
-    width integer NOT NULL
+    width integer NOT NULL,
+    garden_name character varying NOT NULL
 );
 
 
@@ -108,15 +109,14 @@ CREATE TABLE plants (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer NOT NULL,
+    user_id integer,
     plant_name character varying NOT NULL,
     latin_name character varying NOT NULL,
     usda_zone character varying NOT NULL,
     average_height integer NOT NULL,
     average_width integer NOT NULL,
-    season_start timestamp without time zone NOT NULL,
-    season_end timestamp without time zone NOT NULL,
-    plant_icon_url character varying NOT NULL
+    plant_icon_url character varying NOT NULL,
+    active_season character varying
 );
 
 
@@ -212,7 +212,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Data for Name: gardens; Type: TABLE DATA; Schema: public; Owner: home
 --
 
-COPY gardens (id, created_at, updated_at, user_id, length, width) FROM stdin;
+COPY gardens (id, created_at, updated_at, user_id, length, width, garden_name) FROM stdin;
 \.
 
 
@@ -242,7 +242,7 @@ SELECT pg_catalog.setval('gardens_plants_id_seq', 1, false);
 -- Data for Name: plants; Type: TABLE DATA; Schema: public; Owner: home
 --
 
-COPY plants (id, created_at, updated_at, user_id, plant_name, latin_name, usda_zone, average_height, average_width, season_start, season_end, plant_icon_url) FROM stdin;
+COPY plants (id, created_at, updated_at, user_id, plant_name, latin_name, usda_zone, average_height, average_width, plant_icon_url, active_season) FROM stdin;
 \.
 
 
