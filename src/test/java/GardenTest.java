@@ -68,4 +68,18 @@ public class GardenTest {
     assertTrue(savedGarden.equals(testGarden));
   }
 
+  @Test 
+  public void save_assignsIdToGarden_int() {
+    testGarden.save();
+    Garden savedGarden = Garden.all().get(0);
+    assertEquals(savedGarden.getId(), testGarden.getId());
+  }
+
+  @Test 
+public void find_returnsSearchedForInstanceOfGarden_Garden() {
+  testGarden.save();
+  Garden foundGarden = Garden.findById(testGarden.getId()); 
+  assertTrue(testGarden.equals(foundGarden));
+}
+
 }

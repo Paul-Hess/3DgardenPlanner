@@ -85,6 +85,15 @@ public class Garden {
 				.executeAndFetch(Garden.class);
 		}
 	}
+
+	public static Garden findById(int id) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM gardens WHERE id=:id;";
+			return con.createQuery(sql)
+				.addParameter("id", id)
+				.executeAndFetchFirst(Garden.class);
+		}
+	}
 	// update
 	// delete
 
