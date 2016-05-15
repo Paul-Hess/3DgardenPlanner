@@ -109,7 +109,6 @@ CREATE TABLE plants (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer,
     plant_name character varying NOT NULL,
     latin_name character varying NOT NULL,
     usda_zone character varying NOT NULL,
@@ -181,6 +180,40 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
+-- Name: users_plants; Type: TABLE; Schema: public; Owner: home; Tablespace: 
+--
+
+CREATE TABLE users_plants (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    plant_id integer NOT NULL
+);
+
+
+ALTER TABLE users_plants OWNER TO home;
+
+--
+-- Name: users_plants_id_seq; Type: SEQUENCE; Schema: public; Owner: home
+--
+
+CREATE SEQUENCE users_plants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_plants_id_seq OWNER TO home;
+
+--
+-- Name: users_plants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: home
+--
+
+ALTER SEQUENCE users_plants_id_seq OWNED BY users_plants.id;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: home
 --
 
@@ -206,6 +239,13 @@ ALTER TABLE ONLY plants ALTER COLUMN id SET DEFAULT nextval('plants_id_seq'::reg
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: home
+--
+
+ALTER TABLE ONLY users_plants ALTER COLUMN id SET DEFAULT nextval('users_plants_id_seq'::regclass);
 
 
 --
@@ -242,7 +282,7 @@ SELECT pg_catalog.setval('gardens_plants_id_seq', 1, false);
 -- Data for Name: plants; Type: TABLE DATA; Schema: public; Owner: home
 --
 
-COPY plants (id, created_at, updated_at, user_id, plant_name, latin_name, usda_zone, average_height, average_width, plant_icon_url, active_season) FROM stdin;
+COPY plants (id, created_at, updated_at, plant_name, latin_name, usda_zone, average_height, average_width, plant_icon_url, active_season) FROM stdin;
 \.
 
 
@@ -266,6 +306,21 @@ COPY users (id, user_name, email, created_at, updated_at, password) FROM stdin;
 --
 
 SELECT pg_catalog.setval('users_id_seq', 1, false);
+
+
+--
+-- Data for Name: users_plants; Type: TABLE DATA; Schema: public; Owner: home
+--
+
+COPY users_plants (id, user_id, plant_id) FROM stdin;
+\.
+
+
+--
+-- Name: users_plants_id_seq; Type: SEQUENCE SET; Schema: public; Owner: home
+--
+
+SELECT pg_catalog.setval('users_plants_id_seq', 1, false);
 
 
 --
@@ -314,6 +369,14 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_plants_pkey; Type: CONSTRAINT; Schema: public; Owner: home; Tablespace: 
+--
+
+ALTER TABLE ONLY users_plants
+    ADD CONSTRAINT users_plants_pkey PRIMARY KEY (id);
 
 
 --

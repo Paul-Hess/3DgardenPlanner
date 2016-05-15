@@ -52,11 +52,6 @@ public class PlantTest {
   	assertEquals(testPlant.getIcon(), "pathTo/plantimage.jpg");
   }
 
-  @Test
-  public void getUserId_returnsIdOfAssociatedUser_int() {
-  	assertEquals(testPlant.getUserId(), 0);
-  }
-
   @Test 
   public void getId_returnsPlantId_int() {
   	assertEquals(testPlant.getId(), 0);

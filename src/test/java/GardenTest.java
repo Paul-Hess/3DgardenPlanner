@@ -85,14 +85,20 @@ public class GardenTest {
   @Test 
   public void update_setsNewValuesOnGardenProperties_true() {
     testGarden.save();
-    testGarden.update("new name", 3, 6);
+    testGarden.update("new name", 6, 3);
     Timestamp testTimestamp = new Timestamp(new Date().getTime());
     Garden updatedGarden = Garden.findById(testGarden.getId());
     assertEquals(updatedGarden.getName(), "new name");
     assertEquals(updatedGarden.getLength(), 6);
     assertEquals(updatedGarden.getWidth(), 3);
     assertEquals(updatedGarden.getUpdatedAt().getHours(), testTimestamp.getHours());
+  }
 
+  @Test 
+  public void delete_removesInstanceOfGarden_0() {
+    testGarden.save();
+    testGarden.delete();
+    assertEquals(Garden.all().size(), 0);
   }
 
 }

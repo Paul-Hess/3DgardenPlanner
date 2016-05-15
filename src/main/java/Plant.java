@@ -8,7 +8,6 @@ public class Plant {
 	private int id;
 	private Timestamp created_at;
 	private Timestamp updated_at;
-	private int user_id;
 	private String plant_name;
 	private String latin_name;
 	private String usda_zone;
@@ -41,8 +40,7 @@ public class Plant {
 			newPlant.getHeight() == this.getHeight() &&
 			newPlant.getSeason().equals(this.getSeason()) &&
 			newPlant.getIcon().equals(this.getIcon()) &&
-			newPlant.getId() == this.getId() &&
-			newPlant.getUserId() == this.getUserId();
+			newPlant.getId() == this.getId();
 		}
 	}
 
@@ -74,10 +72,6 @@ public class Plant {
 
 	public String getIcon() {
 		return this.plant_icon_url;
-	}
-
-	public int getUserId() {
-		return this.user_id;
 	}
 
 	public int getId() {
@@ -117,7 +111,7 @@ public class Plant {
 
 	public static List<Plant> all() {
 		try(Connection con = DB.sql2o.open()) {
-			String sql = "SELECT id, plant_name, latin_name, usda_zone, average_height, average_width, active_season, user_id, plant_icon_url, created_at, updated_at FROM plants;";
+			String sql = "SELECT id, plant_name, latin_name, usda_zone, average_height, average_width, active_season, plant_icon_url, created_at, updated_at FROM plants;";
 			return con.createQuery(sql)
 				.executeAndFetch(Plant.class);
 		}

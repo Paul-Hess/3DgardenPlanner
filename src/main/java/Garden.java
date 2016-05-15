@@ -97,7 +97,7 @@ public class Garden {
 
 	// update
 
-	public void update(String new_name, int new_width, int new_length) {
+	public void update(String new_name, int new_length, int new_width) {
 		try(Connection con = DB.sql2o.open()) {
 			String update = "UPDATE gardens SET garden_name=:new_name, width=:new_width, length=:new_length, updated_at=:updated_at WHERE id=:id;";
 				con.createQuery(update)
@@ -110,5 +110,14 @@ public class Garden {
 		}
 	}
 	// delete
+
+	public void delete() {
+		try(Connection con = DB.sql2o.open()) {
+			String deleteGarden = "DELETE FROM gardens WHERE id=:id;";
+			con.createQuery(deleteGarden)
+				.addParameter("id", this.id)
+				.executeUpdate();
+		}
+	}
 
 }
