@@ -101,4 +101,19 @@ public class GardenTest {
     assertEquals(Garden.all().size(), 0);
   }
 
+  @Test 
+  public void getPlants_intializesAsEmptyList_0() {
+    testGarden.save();
+    assertEquals(testGarden.getPlants().size(), 0);
+  }
+
+  @Test 
+  public void addPlant_savesInstanceOfGardensPlants_Plant() {
+    testGarden.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testGarden.addPlant(testPlant);
+    assertTrue(testGarden.getPlants().get(0).equals(testPlant));
+  }
+
 }

@@ -76,6 +76,16 @@ public class Garden {
 		}
 	}
 
+	public void addPlant(Plant newPlant) {
+		try(Connection con = DB.sql2o.open()) {
+			String join = "INSERT INTO gardens_plants (garden_id, plant_id) VALUES (:id, :plant_id);";
+			con.createQuery(join)
+				.addParameter("id", this.id)
+				.addParameter("plant_id", newPlant.getId())
+				.executeUpdate();
+		}
+	}
+
 	// read
 
 	public static List<Garden> all() {
@@ -92,6 +102,15 @@ public class Garden {
 			return con.createQuery(sql)
 				.addParameter("id", id)
 				.executeAndFetchFirst(Garden.class);
+		}
+	}
+
+	public List<Plant> getPlants() {
+		try(Connection con = DB.sql2o.open()) {
+			String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id;";
+			return con.createQuery(joinQuery)
+				.addParameter("id", this.id)
+				.executeAndFetch(Plant.class);
 		}
 	}
 
@@ -114,6 +133,10 @@ public class Garden {
 	public void delete() {
 		try(Connection con = DB.sql2o.open()) {
 			String deleteGarden = "DELETE FROM gardens WHERE id=:id;";
+			String deleteJoin = "DELETE FROM gardens_plants WHERE garden_id=:id;";
+			con.createQuery(deleteJoin)
+				.addParameter("id", this.id)
+				.executeUpdate();
 			con.createQuery(deleteGarden)
 				.addParameter("id", this.id)
 				.executeUpdate();

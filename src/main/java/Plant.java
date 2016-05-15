@@ -180,22 +180,6 @@ public class Plant {
 		}
 	}
 
-	// delete
-
-public void delete() {
-	try(Connection con = DB.sql2o.open()) {
-		String deleteJoinQuery = "DELETE FROM gardens_plants WHERE plant_id=:id;";
-		con.createQuery(deleteJoinQuery)
-			.addParameter("id", this.id)
-			.executeUpdate();
-
-		String deletePlantQuery = "DELETE FROM plants WHERE id=:id;";
-			con.createQuery(deletePlantQuery)
-				.addParameter("id", this.id)
-				.executeUpdate();
-	}
-}
-
-
+// don't delete plants!
 
 }

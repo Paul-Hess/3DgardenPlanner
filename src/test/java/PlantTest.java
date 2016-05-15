@@ -144,11 +144,4 @@ public class PlantTest {
   	assertEquals(updatedPlant.getIcon(), "pathTo/plantimage2.jpg");
   	assertEquals(testTimestamp.getMinutes(), updatedPlant.getUpdatedAt().getMinutes());
   }
-
-  @Test 
-  public void delete_deletesPlant_0() {
-  	testPlant.save();
-  	testPlant.delete();
-  	assertEquals(Plant.all().size(), 0);
-  }
 }
