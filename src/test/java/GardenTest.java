@@ -76,10 +76,23 @@ public class GardenTest {
   }
 
   @Test 
-public void find_returnsSearchedForInstanceOfGarden_Garden() {
-  testGarden.save();
-  Garden foundGarden = Garden.findById(testGarden.getId()); 
-  assertTrue(testGarden.equals(foundGarden));
-}
+  public void find_returnsSearchedForInstanceOfGarden_Garden() {
+    testGarden.save();
+    Garden foundGarden = Garden.findById(testGarden.getId()); 
+    assertTrue(testGarden.equals(foundGarden));
+  }
+
+  @Test 
+  public void update_setsNewValuesOnGardenProperties_true() {
+    testGarden.save();
+    testGarden.update("new name", 3, 6);
+    Timestamp testTimestamp = new Timestamp(new Date().getTime());
+    Garden updatedGarden = Garden.findById(testGarden.getId());
+    assertEquals(updatedGarden.getName(), "new name");
+    assertEquals(updatedGarden.getLength(), 6);
+    assertEquals(updatedGarden.getWidth(), 3);
+    assertEquals(updatedGarden.getUpdatedAt().getHours(), testTimestamp.getHours());
+
+  }
 
 }

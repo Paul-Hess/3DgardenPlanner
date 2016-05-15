@@ -94,7 +94,21 @@ public class Garden {
 				.executeAndFetchFirst(Garden.class);
 		}
 	}
+
 	// update
+
+	public void update(String new_name, int new_width, int new_length) {
+		try(Connection con = DB.sql2o.open()) {
+			String update = "UPDATE gardens SET garden_name=:new_name, width=:new_width, length=:new_length, updated_at=:updated_at WHERE id=:id;";
+				con.createQuery(update)
+					.addParameter("id", this.id)
+					.addParameter("new_name", new_name)
+					.addParameter("new_width", new_width)
+					.addParameter("new_length", new_length)
+					.addParameter("updated_at", new Timestamp(new Date().getTime()))
+					.executeUpdate();	
+		}
+	}
 	// delete
 
 }
