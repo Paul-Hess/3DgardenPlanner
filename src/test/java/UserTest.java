@@ -200,8 +200,15 @@ public class UserTest {
 	@Test 
 	public void removeAccount_deletesUserFromDatabase_0() {
 		testUser.save();
+		Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+		testPlant.save();
+		testUser.addPlant(testPlant);
+		Garden testGarden = new Garden("garden name", 8, 12, testUser.getId());
+		testGarden.save();
 		String success = testUser.removeAccount("user@example.com", "F00bar#");
 		assertEquals("success", success);
+		assertEquals(testUser.getPlants().size(), 0);
+		assertEquals(testUser.getGardens().size(), 0);
 		assertEquals(0, User.all().size());
 	}
 
@@ -266,5 +273,79 @@ public class UserTest {
 		boolean isValidated = User.checkUserAuth("user2@example.com", "F00bar#");
 		assertTrue(isValidated);
 	}
+
+	@Test 
+	public void is_admin_defaultsToFalse_false() {
+		testUser.save();
+		assertFalse(testUser.isAdmin());
+	}
+
+	@Test 
+	public void setAdmin_updatesUserAsAdmin_true() {
+		testUser.save();
+		testUser.setAdmin();
+		User updatedUser = User.findById(testUser.getId());
+		assertTrue(updatedUser.isAdmin());
+	}
+
+	@Test 
+	public void getPlants_instantiatesAsEmptyList_0() {
+		testUser.save();
+		assertEquals(testUser.getPlants().size(), 0);
+	}
+
+	@Test 
+	public void addPlant_addsPlantToUserCollection_Plant() {
+		testUser.save();
+		Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+		testPlant.save();
+		testUser.addPlant(testPlant);
+		assertEquals(testUser.getPlants().get(0), testPlant);
+	}
+
+	@Test 
+	public void removePlant_removesPlantFromUsersCollection_0() {
+		testUser.save();
+		Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+		testPlant.save();
+		testUser.addPlant(testPlant);
+		testUser.removePlant(testPlant);
+		assertEquals(testUser.getPlants().size(), 0);		
+	}
+
+	@Test 
+	public void getGardens_instantiatesAsEmptyList_0() {
+		testUser.save();
+		assertEquals(testUser.getGardens().size(), 0);
+	}
+
+	@Test 
+	public void addGarden_userCanCreateGarden_Garden() {
+		testUser.save();
+		Garden testGarden = new Garden("garden name", 8, 12, testUser.getId());
+		testGarden.save();
+		assertEquals(testUser.getGardens().get(0), testGarden);
+	}
+
+	@Test 
+	public void getGardens_ordersByUpdatedAt_Garden() {
+		testUser.save();
+		Garden testGarden = new Garden("garden name", 8, 12, testUser.getId());
+		testGarden.save();
+		Garden testGarden2 = new Garden("garden name2", 8, 12, testUser.getId());
+		testGarden2.save();
+		Garden testGarden3 = new Garden("garden name3", 8, 12, testUser.getId());
+		testGarden3.save();
+		try{
+			Thread.sleep(20000);
+		} catch(InterruptedException ie) {
+			String error = ie.getMessage();
+		} 
+		testGarden2.update("updated name2", 8, 12);
+		testGarden3.update("updated name3", 8, 12);
+		Garden expected = Garden.findById(testGarden3.getId());
+		assertEquals(expected, testUser.getGardens().get(0));
+	}
+
 
 }

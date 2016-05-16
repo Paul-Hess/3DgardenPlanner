@@ -30,42 +30,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: companion_plants; Type: TABLE; Schema: public; Owner: home; Tablespace: 
---
-
-CREATE TABLE companion_plants (
-    key integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    plant_name character varying NOT NULL,
-    parent_plant_id integer
-);
-
-
-ALTER TABLE companion_plants OWNER TO home;
-
---
--- Name: companion_plants_key_seq; Type: SEQUENCE; Schema: public; Owner: home
---
-
-CREATE SEQUENCE companion_plants_key_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE companion_plants_key_seq OWNER TO home;
-
---
--- Name: companion_plants_key_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: home
---
-
-ALTER SEQUENCE companion_plants_key_seq OWNED BY companion_plants.key;
-
-
---
 -- Name: gardens; Type: TABLE; Schema: public; Owner: home; Tablespace: 
 --
 
@@ -222,7 +186,8 @@ CREATE TABLE users (
     email character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    password character varying NOT NULL
+    password character varying NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -284,13 +249,6 @@ ALTER SEQUENCE users_plants_id_seq OWNED BY users_plants.id;
 
 
 --
--- Name: key; Type: DEFAULT; Schema: public; Owner: home
---
-
-ALTER TABLE ONLY companion_plants ALTER COLUMN key SET DEFAULT nextval('companion_plants_key_seq'::regclass);
-
-
---
 -- Name: id; Type: DEFAULT; Schema: public; Owner: home
 --
 
@@ -330,21 +288,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY users_plants ALTER COLUMN id SET DEFAULT nextval('users_plants_id_seq'::regclass);
-
-
---
--- Data for Name: companion_plants; Type: TABLE DATA; Schema: public; Owner: home
---
-
-COPY companion_plants (key, created_at, updated_at, plant_name, parent_plant_id) FROM stdin;
-\.
-
-
---
--- Name: companion_plants_key_seq; Type: SEQUENCE SET; Schema: public; Owner: home
---
-
-SELECT pg_catalog.setval('companion_plants_key_seq', 1, false);
 
 
 --
@@ -411,7 +354,7 @@ SELECT pg_catalog.setval('plants_id_seq', 1, true);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: home
 --
 
-COPY users (id, user_name, email, created_at, updated_at, password) FROM stdin;
+COPY users (id, user_name, email, created_at, updated_at, password, is_admin) FROM stdin;
 \.
 
 
@@ -435,14 +378,6 @@ COPY users_plants (id, user_id, plant_id) FROM stdin;
 --
 
 SELECT pg_catalog.setval('users_plants_id_seq', 1, false);
-
-
---
--- Name: companion_plants_pkey; Type: CONSTRAINT; Schema: public; Owner: home; Tablespace: 
---
-
-ALTER TABLE ONLY companion_plants
-    ADD CONSTRAINT companion_plants_pkey PRIMARY KEY (key);
 
 
 --

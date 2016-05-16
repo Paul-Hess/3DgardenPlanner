@@ -151,7 +151,6 @@ public class PlantTest {
     assertEquals(testPlant.getCompanions().size(), 0);
   }
 
-
   @Test 
   public void addCompanion_setsCompanionRelationshipBetweenPlants_true() {
     testPlant.save();

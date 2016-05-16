@@ -15,6 +15,7 @@ public class User {
 	private String password;
 	private Timestamp created_at;
 	private Timestamp updated_at;
+	private boolean is_admin = false;
 
 
 	@Override
@@ -59,6 +60,10 @@ public class User {
 		return this.updated_at;
 	}
 
+	public boolean isAdmin() {
+		return this.is_admin;
+	}
+
 	public static String getHashedPassword(String email) {
 		String sql = "SELECT password FROM users WHERE email=:email;";
 		try(Connection con = DB.sql2o.open()) {
@@ -85,10 +90,20 @@ public class User {
 		}
 	}
 
+	public void addPlant(Plant plant) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "INSERT INTO users_plants (user_id, plant_id) VALUES (:user_id, :plant_id);";
+			con.createQuery(sql)
+				.addParameter("user_id", this.id)
+				.addParameter("plant_id", plant.getId())
+				.executeUpdate();
+		}
+	}
+
 // read
 
 	public static List<User> all() {
-		String sql = "SELECT id, user_name, email, password FROM users;";
+		String sql = "SELECT id, user_name, email, password, is_admin FROM users;";
 		try(Connection con = DB.sql2o.open()) {
 			return con.createQuery(sql)
 				.executeAndFetch(User.class);
@@ -126,6 +141,23 @@ public class User {
 			}	
 	}
 
+	public List<Plant> getPlants() {
+		try(Connection con = DB.sql2o.open()) {
+			String joinQuery = "SELECT plants.* FROM users JOIN users_plants ON (users.id = users_plants.user_id) JOIN plants ON (plants.id = users_plants.plant_id) WHERE users.id=:id;";
+			return con.createQuery(joinQuery)
+				.addParameter("id", this.id)
+				.executeAndFetch(Plant.class);
+		}
+	}
+
+	public List<Garden> getGardens() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT * FROM gardens WHERE user_id=:id ORDER BY updated_at DESC;";
+			return con.createQuery(sql)
+				.addParameter("id", this.id)
+				.executeAndFetch(Garden.class);
+		}
+	}
 
 // update
 
@@ -200,6 +232,18 @@ public class User {
 				return error;
 			}
 		}
+
+		public void setAdmin() {
+			try(Connection con = DB.sql2o.open()) {
+				String sql = "UPDATE users SET is_admin=:new_value WHERE id=:id;";
+				con.createQuery(sql)
+					.addParameter("id", this.id)
+					.addParameter("new_value", true)
+					.executeUpdate();			
+			}
+
+		}
+
 // delete
 
 	public String removeAccount(String userEmail, String plain_password) {
@@ -208,7 +252,15 @@ public class User {
 			String hashed = getHashedPassword(userEmail);
 			if(BCrypt.checkpw(plain_password, hashed)) {
 				try(Connection con = DB.sql2o.open()) {
+					String deleteJoin = "DELETE FROM users_plants WHERE user_id=:join_id;";
+					String deleteGardens = "DELETE FROM gardens WHERE user_id=:user_id;";
 					String deleteUser = "DELETE FROM users WHERE id=:id;";
+					con.createQuery(deleteJoin)
+						.addParameter("join_id", this.id)
+						.executeUpdate();
+					con.createQuery(deleteGardens)
+						.addParameter("user_id", this.id)
+						.executeUpdate();
 					con.createQuery(deleteUser)
 						.addParameter("id", this.id)
 						.executeUpdate();
@@ -221,5 +273,15 @@ public class User {
 		} else {
 			return error;
 		}
-	}	
+	}
+
+	public void removePlant(Plant plant) {
+		try(Connection con = DB.sql2o.open()) {
+			String deleteJoin = "DELETE FROM users_plants WHERE user_id=:id AND plant_id=:plant_id;";
+			con.createQuery(deleteJoin)
+				.addParameter("id", this.id)
+				.addParameter("plant_id", plant.getId())
+				.executeUpdate();
+		}	
+	}		
 }
