@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 import org.sql2o.*;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -106,12 +107,12 @@ public class Plant {
 		}
 	}
 
-	public void addCompanion(CompanionPlant companion) {
+	public void addCompanion(Plant companion) {
 		try(Connection con = DB.sql2o.open()) {
 			String sql = "INSERT INTO plants_companions (plant_id, companion_plant_id) VALUES (:plant_id, :companion_plant_id);";
 			con.createQuery(sql)
 				.addParameter("plant_id", this.id)
-				.addParameter("companion_plant_id", companion.getKey())
+				.addParameter("companion_plant_id", companion.getId())
 				.executeUpdate();
 		}
 	}
@@ -172,12 +173,23 @@ public class Plant {
 		}	
 	}
 
-	public List<CompanionPlant> getCompanions() {
+	public List<Plant> getCompanions() {
 		try(Connection con = DB.sql2o.open()) {
-			String sql = "SELECT companion_plants.* from plants JOIN plants_companions ON (plants.id = plants_companions.plant_id) JOIN companion_plants ON (companion_plants.key = plants_companions.companion_plant_id) WHERE plants.id=:id;";
-			return con.createQuery(sql)
+			String sql = "SELECT companion_plant_id FROM plants_companions WHERE plant_id=:id;";
+			List<Integer> plantIds = con.createQuery(sql)
 				.addParameter("id", this.id)
-				.executeAndFetch(CompanionPlant.class);
+				.executeAndFetch(Integer.class);
+
+				List<Plant> foundPlants = new ArrayList<Plant>();
+
+				for(Integer plantId : plantIds) {
+					String join = "SELECT * FROM plants WHERE id=:id;";
+					Plant plant = con.createQuery(join)
+						.addParameter("id", plantId)
+						.executeAndFetchFirst(Plant.class);
+						foundPlants.add(plant);
+				}
+			return foundPlants;	
 		}
 	}
 
@@ -202,12 +214,12 @@ public class Plant {
 
 // don't delete plants!
 
-	public void removeCompanion(CompanionPlant companion) {
+	public void removeCompanion(Plant companion) {
 		try(Connection con = DB.sql2o.open()) {
-			String deleteJoin = "DELETE FROM plants_companions WHERE plant_id=:id AND companion_plant_id=:key;";
+			String deleteJoin = "DELETE FROM plants_companions WHERE plant_id=:id AND companion_plant_id=:companion_id;";
 			con.createQuery(deleteJoin)
 				.addParameter("id", this.id)
-				.addParameter("key", companion.getKey())
+				.addParameter("companion_id", companion.getId())
 				.executeUpdate();
 		}
 	}

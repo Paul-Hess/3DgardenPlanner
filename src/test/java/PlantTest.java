@@ -155,19 +155,19 @@ public class PlantTest {
   @Test 
   public void addCompanion_setsCompanionRelationshipBetweenPlants_true() {
     testPlant.save();
-    CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
-    testCompanion.save();
-    testPlant.addCompanion(testCompanion);
-    assertEquals(testPlant.getCompanions().get(0), testCompanion);
+    Plant testPlant2 = new Plant("plant name2", "plantae latinina", "west 3", 3, 2, "fall", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    testPlant.addCompanion(testPlant2);
+    assertEquals(testPlant.getCompanions().get(0), testPlant2);
   }
 
   @Test 
   public void removeCompanion_removesJoinRelationshipbetweenPlants_0() {
     testPlant.save();
-    CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
-    testCompanion.save();
-    testPlant.addCompanion(testCompanion);
-    testPlant.removeCompanion(testCompanion);
+    Plant testPlant2 = new Plant("plant name2", "plantae latinina", "west 3", 3, 2, "fall", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    testPlant.addCompanion(testPlant2);
+    testPlant.removeCompanion(testPlant2);
     assertEquals(testPlant.getCompanions().size(), 0);
   }
 }
