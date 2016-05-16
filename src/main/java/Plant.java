@@ -86,11 +86,6 @@ public class Plant {
 		return this.updated_at;
 	}
 
-	 // setter
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	// create 
 
 	public void save() {
@@ -108,6 +103,16 @@ public class Plant {
 				.addParameter("updated_at", this.updated_at)
 				.executeUpdate()
 				.getKey();
+		}
+	}
+
+	public void addCompanion(CompanionPlant companion) {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "INSERT INTO plants_companions (plant_id, companion_plant_id) VALUES (:plant_id, :companion_plant_id);";
+			con.createQuery(sql)
+				.addParameter("plant_id", this.id)
+				.addParameter("companion_plant_id", companion.getKey())
+				.executeUpdate();
 		}
 	}
 
@@ -167,6 +172,15 @@ public class Plant {
 		}	
 	}
 
+	public List<CompanionPlant> getCompanions() {
+		try(Connection con = DB.sql2o.open()) {
+			String sql = "SELECT companion_plants.* from plants JOIN plants_companions ON (plants.id = plants_companions.plant_id) JOIN companion_plants ON (companion_plants.key = plants_companions.companion_plant_id) WHERE plants.id=:id;";
+			return con.createQuery(sql)
+				.addParameter("id", this.id)
+				.executeAndFetch(CompanionPlant.class);
+		}
+	}
+
 	// update 
 
 	public void update(String new_name, String new_latin, String new_zone, int new_height, int new_width, String new_season, String new_url) {
@@ -187,5 +201,15 @@ public class Plant {
 	}
 
 // don't delete plants!
+
+	public void removeCompanion(CompanionPlant companion) {
+		try(Connection con = DB.sql2o.open()) {
+			String deleteJoin = "DELETE FROM plants_companions WHERE plant_id=:id AND companion_plant_id=:key;";
+			con.createQuery(deleteJoin)
+				.addParameter("id", this.id)
+				.addParameter("key", companion.getKey())
+				.executeUpdate();
+		}
+	}
 
 }

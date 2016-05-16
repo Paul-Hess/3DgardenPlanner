@@ -145,9 +145,29 @@ public class PlantTest {
   	assertEquals(testTimestamp.getMinutes(), updatedPlant.getUpdatedAt().getMinutes());
   }
 
-  // @Test 
-  // public void addCompanion_setsCompanionRelationshipBetweenPlants_true() {
-  //   testPlant.save();
-  //   CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
-  // }
+  @Test 
+  public void getCompanions_initializesAsEmptyList_0() {
+    testPlant.save();
+    assertEquals(testPlant.getCompanions().size(), 0);
+  }
+
+
+  @Test 
+  public void addCompanion_setsCompanionRelationshipBetweenPlants_true() {
+    testPlant.save();
+    CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
+    testCompanion.save();
+    testPlant.addCompanion(testCompanion);
+    assertEquals(testPlant.getCompanions().get(0), testCompanion);
+  }
+
+  @Test 
+  public void removeCompanion_removesJoinRelationshipbetweenPlants_0() {
+    testPlant.save();
+    CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
+    testCompanion.save();
+    testPlant.addCompanion(testCompanion);
+    testPlant.removeCompanion(testCompanion);
+    assertEquals(testPlant.getCompanions().size(), 0);
+  }
 }
