@@ -28,17 +28,154 @@ public class App {
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    // before filters ==================================== //
+
+    before("/user/:user_id", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		authenticated = true;
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/edit", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		authenticated = true;
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/admin", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/plant-new", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/plant/:plant_id/edit-plant", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+
+    before("/user/:user_id/garden-new", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/gardens", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/garden/:garden_id", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+    before("/user/:user_id/garden/:garden_id/edit-garden", (request, response) -> {
+    	boolean authenticated = false;
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		if(currentUser.isAdmin()) {
+    			authenticated = true;
+    		}
+    	}
+    	if(!authenticated) {
+    		halt(401, "you must be logged in to view this page!");
+    	}
+    });
+
+
+
+
+    // ======================================================= //
+
     get("/user/:user_id", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
     	int userId = Integer.parseInt(request.params("user_id"));
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
-    	if(currentUser.equals(loggedInUser)) {
-    		model.put("authenticated", true);
-    		model.put("currentUser", currentUser);
-    	} else {
-    		model.put("authenticated", false);
-    	}
+
+    	model.put("authenticated", true);
+    	model.put("currentUser", currentUser);
+
     	model.put("template", "templates/user.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -140,17 +277,19 @@ public class App {
     			return null;
     		} else {
     			Map<String, Object> model = new HashMap<String, Object>();
-	    		model.put("authFail", true);
-	    		model.put("template", "templates/sign-up.vtl");
+    			boolean authFail = true;
+	    		model.put("authFail", authFail);
+	    		model.put("template", "templates/log-in.vtl");
 	    		return new ModelAndView(model, layout);
     		}
     	} else {
      		Map<String, Object> model = new HashMap<String, Object>();
-    		model.put("error", true);
-    		model.put("template", "templates/sign-up.vtl");
+     		boolean error = true;
+    		model.put("error", error);
+    		model.put("template", "templates/log-in.vtl");
     		return new ModelAndView(model, layout);
     	}
-    });
+    }, new VelocityTemplateEngine());
 
     post("/log-out", (request, response) -> {
     	response.redirect("/");
