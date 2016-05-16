@@ -1,3 +1,13 @@
+#if($error)
+	<h3 class="error">
+		Error: Password did not match confirmation!
+	</h3>
+#end
+#if($authFail)
+	<h3 class="error">
+		Error: Either password or email input did not match!
+	</h3>
+#end
 <h3>Login Here: </h3>
 <div class="sign-up">
 	<form action="/log-in" method="post">

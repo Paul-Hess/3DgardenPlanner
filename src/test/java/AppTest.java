@@ -67,5 +67,28 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("Login Here: ");
   }
 
+  @Test 
+  public void SignUpErrorMisMatchedPasswordInput() {
+    goTo("http://localhost:4567/sign-up");
+    fill("#user-email").with("test@example.com");
+    fill("#user-name").with("testUser");
+    fill("#user-password").with("F00bar##");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#signup-button");
+    assertThat(pageSource()).contains("Error: Password did not match confirmation!");
+  }
+
+  @Test 
+  public void LoginAuthenticatesUserProfilePage() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    assertThat(pageSource()).contains("userName");
+  }
+
 
 }

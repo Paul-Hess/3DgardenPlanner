@@ -30,6 +30,15 @@ public class App {
 
     get("/user/:user_id", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+    	int userId = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(userId);
+    	User loggedInUser = request.session().attribute("authenticated");
+    	if(currentUser.equals(loggedInUser)) {
+    		model.put("authenticated", true);
+    		model.put("currentUser", currentUser);
+    	} else {
+    		model.put("authenticated", false);
+    	}
     	model.put("template", "templates/user.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -98,14 +107,11 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/sign-up", (request, response) -> {
-
     	boolean error = false;
     	String email = request.queryParams("user-email");
     	String plainPassword = request.queryParams("user-password");
     	String confirmation = request.queryParams("pass-confirmation");
     	String name = request.queryParams("user-name");
-    	boolean isTrue = plainPassword.equals(confirmation);
-    	System.out.println(isTrue);
     	if(plainPassword.equals(confirmation)) {
     		User newUser = new User(name, email, plainPassword);
     		newUser.save();
@@ -114,15 +120,36 @@ public class App {
     	} else {
     		Map<String, Object> model = new HashMap<String, Object>();
 				error = true;
-				System.out.println("foo");
     		model.put("error", error);
+    		model.put("template", "templates/sign-up.vtl");
     		return new ModelAndView(model, layout);
     	}  	
     }, new VelocityTemplateEngine());
 
     post("/log-in", (request, response) -> {
-    	response.redirect("/user/:user_id");
-    	return null;
+    	
+    	String email = request.queryParams("user-email");
+    	String plainPassword = request.queryParams("user-password");
+    	String confirmation = request.queryParams("pass-confirmation");
+
+    	if(plainPassword.equals(confirmation)) {
+    		if(User.checkUserAuth(email, plainPassword)) {
+    			User currentUser = User.findByEmail(email);	
+    			request.session().attribute("authenticated", currentUser);
+    			response.redirect("/user/" + currentUser.getId());
+    			return null;
+    		} else {
+    			Map<String, Object> model = new HashMap<String, Object>();
+	    		model.put("authFail", true);
+	    		model.put("template", "templates/sign-up.vtl");
+	    		return new ModelAndView(model, layout);
+    		}
+    	} else {
+     		Map<String, Object> model = new HashMap<String, Object>();
+    		model.put("error", true);
+    		model.put("template", "templates/sign-up.vtl");
+    		return new ModelAndView(model, layout);
+    	}
     });
 
     post("/log-out", (request, response) -> {

@@ -1,0 +1,14 @@
+
+#if($authenticated)
+	<div class="user-container">
+		<div class="user-info">
+			<h4>User Name: $currentUser.getName()</h4>
+			<p>My Email: $currentUser.getEmail()</p>
+			<p>Member since: $currentUser.getCreatedAt().getYear()</p>
+		</div>
+	</div>
+#else 
+<h1>You must be logged in to view this page!</h1>
+#end
+
+
