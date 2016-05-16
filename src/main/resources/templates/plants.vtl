@@ -1,0 +1,13 @@
+#foreach($plant in $plants)
+	<div class="all-plants">
+		<div class="plant-detail">
+			<h3>$plant.getName()</h3>
+			<h4>$plant.getLatinName()</h4>
+			<p>$plant.getZone()</p>
+			<p>$plant.getHeight()</p>
+			<p>$plant.getWidth()</p>
+			<p>$plant.getSeason()</p>
+			<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
+		</div>
+	</div>
+	#end

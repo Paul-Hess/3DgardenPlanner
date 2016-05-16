@@ -34,6 +34,13 @@ public class App {
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/user/:user_id/admin", (request, response) -> {
+    	Map<String, Object> model = new HashMap<String, Object>();
+    	model.put("template", "templates/admin.vtl");
+    	return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+
     get("/user/:user_id/edit", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
     	model.put("template", "templates/user-edit.vtl");
@@ -66,6 +73,7 @@ public class App {
 
     get("/plants", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+    	model.put("plants", Plant.all());
     	model.put("template", "templates/plants.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -90,9 +98,27 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/sign-up", (request, response) -> {
-    	response.redirect("/log-in");
-    	return null;
-    });
+
+    	boolean error = false;
+    	String email = request.queryParams("user-email");
+    	String plainPassword = request.queryParams("user-password");
+    	String confirmation = request.queryParams("pass-confirmation");
+    	String name = request.queryParams("user-name");
+    	boolean isTrue = plainPassword.equals(confirmation);
+    	System.out.println(isTrue);
+    	if(plainPassword.equals(confirmation)) {
+    		User newUser = new User(name, email, plainPassword);
+    		newUser.save();
+    		response.redirect("/log-in");
+    		return null;
+    	} else {
+    		Map<String, Object> model = new HashMap<String, Object>();
+				error = true;
+				System.out.println("foo");
+    		model.put("error", error);
+    		return new ModelAndView(model, layout);
+    	}  	
+    }, new VelocityTemplateEngine());
 
     post("/log-in", (request, response) -> {
     	response.redirect("/user/:user_id");
