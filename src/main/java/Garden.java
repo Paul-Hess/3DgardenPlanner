@@ -137,6 +137,30 @@ public class Garden {
 			}
 	}
 
+	public int getNextPositionWest() {
+		int positionWest = 0;
+		for(Plant plant : this.getPlants()) {
+			positionWest += plant.getWidth();
+		}
+		if(positionWest > this.getLength()) {
+			return positionWest % this.getLength();
+		} else {
+			return positionWest;
+		}
+	}
+
+	public int getNextPositionNorth() {
+		int positionNorth = 0;
+		for (Plant plant : this.getPlants()) {
+			positionNorth += plant.getWidth();
+		}
+		if(positionNorth > this.getWidth()) {
+			return positionNorth % this.getWidth();
+		} else {
+			return positionNorth;
+		}
+	}
+
 	// update
 
 	public void update(String new_name, int new_length, int new_width) {
@@ -151,6 +175,7 @@ public class Garden {
 					.executeUpdate();	
 		}
 	}
+
 	// delete
 
 	public void delete() {
