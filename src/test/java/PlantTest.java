@@ -144,4 +144,10 @@ public class PlantTest {
   	assertEquals(updatedPlant.getIcon(), "pathTo/plantimage2.jpg");
   	assertEquals(testTimestamp.getMinutes(), updatedPlant.getUpdatedAt().getMinutes());
   }
+
+  // @Test 
+  // public void addCompanion_setsCompanionRelationshipBetweenPlants_true() {
+  //   testPlant.save();
+  //   CompanionPlant testCompanion = new CompanionPlant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg", testPlant.getId());
+  // }
 }

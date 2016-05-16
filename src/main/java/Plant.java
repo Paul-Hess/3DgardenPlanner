@@ -86,6 +86,11 @@ public class Plant {
 		return this.updated_at;
 	}
 
+	 // setter
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	// create 
 
 	public void save() {
@@ -166,7 +171,7 @@ public class Plant {
 
 	public void update(String new_name, String new_latin, String new_zone, int new_height, int new_width, String new_season, String new_url) {
 		try(Connection con = DB.sql2o.open()) {
-			String sql = "UPDATE plants SET plant_name=:new_name, latin_name=:new_latin, usda_zone=:new_zone, average_height=:new_height, average_width=:new_width, active_season=:new_season, plant_icon_url=:new_url,  updated_at=:update;";
+			String sql = "UPDATE plants SET plant_name=:new_name, latin_name=:new_latin, usda_zone=:new_zone, average_height=:new_height, average_width=:new_width, active_season=:new_season, plant_icon_url=:new_url, updated_at=:update WHERE id=:id;";
 			con.createQuery(sql)
 				.addParameter("new_name", new_name)
 				.addParameter("new_latin", new_latin)
@@ -175,6 +180,7 @@ public class Plant {
 				.addParameter("new_width", new_width)
 				.addParameter("new_season", new_season)
 				.addParameter("new_url", new_url)
+				.addParameter("id", this.id)
 				.addParameter("update", new Timestamp(new Date().getTime()))
 				.executeUpdate();
 		}
