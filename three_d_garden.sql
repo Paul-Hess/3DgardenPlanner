@@ -30,6 +30,27 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: companion_plants; Type: TABLE; Schema: public; Owner: home; Tablespace: 
+--
+
+CREATE TABLE companion_plants (
+    id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    plant_name character varying,
+    latin_name character varying,
+    usda_zone character varying,
+    average_height integer,
+    average_width integer,
+    plant_icon_url character varying,
+    active_season character varying,
+    parent_plant_id integer
+);
+
+
+ALTER TABLE companion_plants OWNER TO home;
+
+--
 -- Name: gardens; Type: TABLE; Schema: public; Owner: home; Tablespace: 
 --
 
@@ -120,6 +141,40 @@ CREATE TABLE plants (
 
 
 ALTER TABLE plants OWNER TO home;
+
+--
+-- Name: plants_companions; Type: TABLE; Schema: public; Owner: home; Tablespace: 
+--
+
+CREATE TABLE plants_companions (
+    id integer NOT NULL,
+    plant_id integer,
+    companion_plant_id integer
+);
+
+
+ALTER TABLE plants_companions OWNER TO home;
+
+--
+-- Name: plants_companions_id_seq; Type: SEQUENCE; Schema: public; Owner: home
+--
+
+CREATE SEQUENCE plants_companions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE plants_companions_id_seq OWNER TO home;
+
+--
+-- Name: plants_companions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: home
+--
+
+ALTER SEQUENCE plants_companions_id_seq OWNED BY plants_companions.id;
+
 
 --
 -- Name: plants_id_seq; Type: SEQUENCE; Schema: public; Owner: home
@@ -238,6 +293,13 @@ ALTER TABLE ONLY plants ALTER COLUMN id SET DEFAULT nextval('plants_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: home
 --
 
+ALTER TABLE ONLY plants_companions ALTER COLUMN id SET DEFAULT nextval('plants_companions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: home
+--
+
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -246,6 +308,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY users_plants ALTER COLUMN id SET DEFAULT nextval('users_plants_id_seq'::regclass);
+
+
+--
+-- Data for Name: companion_plants; Type: TABLE DATA; Schema: public; Owner: home
+--
+
+COPY companion_plants (id, created_at, updated_at, plant_name, latin_name, usda_zone, average_height, average_width, plant_icon_url, active_season, parent_plant_id) FROM stdin;
+\.
 
 
 --
@@ -287,10 +357,25 @@ COPY plants (id, created_at, updated_at, plant_name, latin_name, usda_zone, aver
 
 
 --
+-- Data for Name: plants_companions; Type: TABLE DATA; Schema: public; Owner: home
+--
+
+COPY plants_companions (id, plant_id, companion_plant_id) FROM stdin;
+\.
+
+
+--
+-- Name: plants_companions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: home
+--
+
+SELECT pg_catalog.setval('plants_companions_id_seq', 1, false);
+
+
+--
 -- Name: plants_id_seq; Type: SEQUENCE SET; Schema: public; Owner: home
 --
 
-SELECT pg_catalog.setval('plants_id_seq', 1, false);
+SELECT pg_catalog.setval('plants_id_seq', 1, true);
 
 
 --
@@ -337,6 +422,14 @@ ALTER TABLE ONLY gardens
 
 ALTER TABLE ONLY gardens_plants
     ADD CONSTRAINT gardens_plants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plants_companions_pkey; Type: CONSTRAINT; Schema: public; Owner: home; Tablespace: 
+--
+
+ALTER TABLE ONLY plants_companions
+    ADD CONSTRAINT plants_companions_pkey PRIMARY KEY (id);
 
 
 --

@@ -16,11 +16,15 @@ public class DatabaseRule extends ExternalResource {
       String deletePlantQuery = "DELETE FROM plants *;";
       String deleteGardenPlantQuery = "DELETE FROM gardens_plants *;";
       String deleteUserPlantQuery = "DELETE FROM users_plants *;";
+      String deleteCompanionPlantsQuery = "DELETE FROM companion_plants *;";
+      String deleteCompanionJoinQuery = "DELETE FROM plants_companions *;";
       con.createQuery(deleteUserQuery).executeUpdate();
       con.createQuery(deleteGardenQuery).executeUpdate();
       con.createQuery(deletePlantQuery).executeUpdate();
       con.createQuery(deleteGardenPlantQuery).executeUpdate();
       con.createQuery(deleteUserPlantQuery).executeUpdate();
+      con.createQuery(deleteCompanionJoinQuery).executeUpdate();
+      con.createQuery(deleteCompanionPlantsQuery).executeUpdate();
     }
   }
 
