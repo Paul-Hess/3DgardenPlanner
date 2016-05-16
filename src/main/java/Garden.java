@@ -127,14 +127,14 @@ public class Garden {
 
 
 	public List<Plant> findByAvailableGround(int availableSpace) {
-			double root = Math.sqrt(availableSpace);
-			try(Connection con = DB.sql2o.open()) {
-				String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id AND plants.average_width <= :availableSpace;";
-				return con.createQuery(joinQuery)
-					.addParameter("id", this.id)
-					.addParameter("availableSpace", root)
-					.executeAndFetch(Plant.class);
-			}
+		double root = Math.sqrt(availableSpace);
+		try(Connection con = DB.sql2o.open()) {
+			String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id AND plants.average_width <= :availableSpace;";
+			return con.createQuery(joinQuery)
+				.addParameter("id", this.id)
+				.addParameter("availableSpace", root)
+				.executeAndFetch(Plant.class);
+		}
 	}
 
 	public int getNextPositionWest() {
@@ -180,13 +180,23 @@ public class Garden {
 
 	public void delete() {
 		try(Connection con = DB.sql2o.open()) {
-			String deleteGarden = "DELETE FROM gardens WHERE id=:id;";
-			String deleteJoin = "DELETE FROM gardens_plants WHERE garden_id=:id;";
+			String deleteJoin = "DELETE FROM gardens_plants WHERE garden_id=:gardenId;";
 			con.createQuery(deleteJoin)
-				.addParameter("id", this.id)
+				.addParameter("gardenId", this.id)
 				.executeUpdate();
+			String deleteGarden = "DELETE FROM gardens WHERE id=:id;";
 			con.createQuery(deleteGarden)
 				.addParameter("id", this.id)
+				.executeUpdate();
+		}
+	}
+
+	public void removePlant(Plant plant) {
+		String deleteJoin = "DELETE FROM gardens_plants WHERE garden_id=:id AND plant_id=:plant_id;";
+		try(Connection con = DB.sql2o.open()) {
+			con.createQuery(deleteJoin)
+				.addParameter("id", this.id)
+				.addParameter("plant_id", plant.getId())
 				.executeUpdate();
 		}
 	}

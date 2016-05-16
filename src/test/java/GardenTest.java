@@ -98,8 +98,12 @@ public class GardenTest {
   @Test 
   public void delete_removesInstanceOfGarden_0() {
     testGarden.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testGarden.addPlant(testPlant);
     testGarden.delete();
     assertEquals(Garden.all().size(), 0);
+    assertEquals(testGarden.getPlants().size(), 0);
   }
 
   @Test 
@@ -115,6 +119,15 @@ public class GardenTest {
     testPlant.save();
     testGarden.addPlant(testPlant);
     assertTrue(testGarden.getPlants().get(0).equals(testPlant));
+  }
+  @Test 
+  public void removePlant_removesPlantFromGarden_0() {
+    testGarden.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testGarden.addPlant(testPlant);
+    testGarden.removePlant(testPlant);
+    assertEquals(testGarden.getPlants().size(), 0);
   }
 
   @Test 
