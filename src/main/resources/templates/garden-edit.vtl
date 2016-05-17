@@ -6,3 +6,7 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+<form action="/user/currentUser.getId()/garden/$garden.getId()/delete" method="post">
+	<button type="submit" id="delete-garden">Delete this garden</button>
+</form>

@@ -6,3 +6,18 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+<form action="/user/$currentUser.getId()/garden-new" method="post">
+	
+	<label for="garden-name">Garden Name: </label>
+	<input type="text" id="garden-name" name="garden-name" placeholder="ex: ">
+
+	<label for="length"></label>
+	<input type="number" id="length" name="length">
+
+	<label for="width"></label>
+	<input type="number" id="width" name="width">
+
+	<button type="submit" id="create-garden">Create</button>
+
+</form>

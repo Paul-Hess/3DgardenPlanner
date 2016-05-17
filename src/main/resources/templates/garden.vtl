@@ -6,3 +6,10 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+<div width="$garden.getWidth()vw" height="$garden.getLength()vh"  class="garden-detail">
+	<h3>$garden.getName()</h3>
+
+</div>
+
+<a href="/user/$currentUser.getId()/garden/$garden.getId()/edit-garden">Edit this Garden</a>

@@ -123,7 +123,6 @@ public class App {
       model.put("currentUser", currentUser);
       request.session().attribute("authenticated", currentUser);
 
-
       model.put("template", "templates/garden-new.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -136,6 +135,10 @@ public class App {
       model.put("currentUser", currentUser);
       request.session().attribute("authenticated", currentUser);
 
+      if(currentUser.getGardens().size() > 0) {
+        model.put("gardens", currentUser.getGardens());
+      }
+
       model.put("template", "templates/gardens.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -147,6 +150,9 @@ public class App {
       User currentUser = User.findById(id);
       model.put("currentUser", currentUser);
       request.session().attribute("authenticated", currentUser);
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+      model.put("garden", currentGarden);
 
       model.put("template", "templates/garden.vtl");
       return new ModelAndView(model, layout);
@@ -159,6 +165,10 @@ public class App {
       User currentUser = User.findById(id);
       model.put("currentUser", currentUser);
       request.session().attribute("authenticated", currentUser);
+
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+      model.put("garden", currentGarden);
 
       model.put("template", "templates/garden-edit.vtl");
       return new ModelAndView(model, layout);
@@ -406,7 +416,15 @@ public class App {
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
 
-      response.redirect("/user/:user_id/garden/:garden_id");
+      String name = request.queryParams("garden-name");
+      int length = Integer.parseInt(request.queryParams("length"));
+      int width = Integer.parseInt(request.queryParams("width"));
+      Garden newGarden = new Garden(name, length, width, id);
+      newGarden.save();
+
+      String responseUrl = String.format("/user/%d/garden/%d", id, newGarden.getId());
+
+      response.redirect(responseUrl);
       return null;
     });
 
@@ -490,7 +508,12 @@ public class App {
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
 
-      response.redirect("/user/:user_id");
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+      currentGarden.delete();
+
+
+      response.redirect("/user/" + id);
       return null;
     });
 

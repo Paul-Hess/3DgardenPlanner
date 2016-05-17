@@ -497,4 +497,55 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("plantus latinii");
   }
 
+  @Test
+  public void userCanAddNewGarden() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Create A New Garden Plot"));
+    fill("#garden-name").with("new garden1");
+    fill("#length").with("6");
+    fill("#width").with("12");
+    submit("#create-garden");
+    assertThat(pageSource()).contains("new garden1");
+  }
+
+  @Test
+  public void usersGardensAllPage() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Garden testGarden = new Garden("garden name", 4, 5, testUser.getId());
+    testGarden.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/gardens", testUser.getId());
+    goTo(url);
+    assertThat(pageSource()).contains("garden name");
+  }
+
+  @Test 
+  public void userCanDeleteGarden() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Garden testGarden = new Garden("garden name", 4, 5, testUser.getId());
+    testGarden.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/garden/%d", testUser.getId(), testGarden.getId());
+    goTo(url);
+    click("a", withText("Edit this Garden"));
+    submit("#delete-garden");
+    assertThat(pageSource()).doesNotContain("garden name");
+  }
+
 }

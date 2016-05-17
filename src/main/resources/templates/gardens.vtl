@@ -6,3 +6,11 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+#foreach($garden in $gardens)
+	<div class="garden-info">
+		<a href="/user/$currentUser.getId()/garden/$garden.getId()">$garden.getName()</a>
+		<p>Created: $garden.getCreatedAt()</p>
+		<p>Last Updated: $garden.getUpdatedAt()</p>
+	</div>
+#end
