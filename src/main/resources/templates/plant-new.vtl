@@ -8,25 +8,25 @@
 #end	
 
 <form action="/user/$currentUser.getId()/plant-new" method="post">
-	<label for="plant-name"></label>
+	<label for="plant-name">plant name: </label>
 	<input type="text" id="plant-name" name="plant-name">
 
-	<label for="latin-name"></label>
+	<label for="latin-name"> latin name: </label>
 	<input type="text" id="latin-name" name="latin-name">
 
-	<label for="zone"></label>
+	<label for="zone"> usda zone: </label>
 	<input type="text" id="zone" name="zone">
 
-	<label for="height"></label>
+	<label for="height"> average height: </label>
 	<input type="number" id="height" name="height">
 
-	<label for="width"></label>
+	<label for="width"> average width: </label>
 	<input type="number" id="width" name="width">
 
-	<label for="season"></label>
+	<label for="season"> active season: </label>
 	<input type="text" id="season" name="season">
 
-	<label for="icon-url"></label>
+	<label for="icon-url"> icon url: </label>
 	<input type="text" id="icon-url" name="icon-url">
 
 	<button type="submit" id="create-plant">Submit</button>
