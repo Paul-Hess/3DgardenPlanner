@@ -400,4 +400,38 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("userName");
   }
 
+  @Test 
+  public void userCanDeleteAccount() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/edit", testUser.getId());
+    goTo(url);
+    fill("#account-email").with("user@example.com");
+    fill("#account-password").with("F00bar#");
+    fill("#account-confirmation").with("F00bar#");
+    submit("#delete-account");
+    assertThat(pageSource()).contains("Join our gardening community today");
+  }
+
+  @Test 
+  public void userCanAddPlantsToCollection() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    goTo("http://localhost:4567/plant/" + testPlant.getId());
+    submit("#add-plant");
+    assertThat(pageSource()).contains("plantus latinii");
+  }
+
 }

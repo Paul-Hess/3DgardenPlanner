@@ -76,6 +76,11 @@ public class App {
       int id = Integer.parseInt(request.params("user_id"));
       User currentUser = User.findById(id);
       model.put("currentUser", currentUser);
+      int year = currentUser.getCreatedAt().getYear() + 1900;
+      model.put("year", year);
+      if(currentUser.getPlants().size() > 0) {
+        model.put("myPlants", currentUser.getPlants());
+      }
       request.session().attribute("authenticated", currentUser);
 
       model.put("template", "templates/user.vtl");
@@ -195,6 +200,11 @@ public class App {
 
     get("/plant/:plant_id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+
+      int plantId = Integer.parseInt(request.params("plant_id"));
+      Plant currentPlant = Plant.findById(plantId);
+      model.put("plant", currentPlant);
+
 
       if(!(request.session().attribute("authenticated") instanceof User)) {
         boolean notAuth = true;
@@ -487,18 +497,42 @@ public class App {
       int id = Integer.parseInt(request.params("user_id"));
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
+      String password = request.queryParams("account-password");
+      String confirmation = request.queryParams("account-confirmation");
+      String email = request.queryParams("account-email");
+      if(password.equals(confirmation)) {
+        if(currentUser.removeAccount(email, password).equals("success")) {
+          request.session().removeAttribute("authenticated");
+          response.redirect("/sign-up");
+          return null;
+        } else {
+          Map<String, Object> model = new HashMap<String, Object>();
+          boolean authFail = true;
+          model.put("authFail", authFail);
+          model.put("template", "templates/user-edit.vtl");
+          return new ModelAndView(model, layout);
+        }
+      } else {
+        Map<String, Object> model = new HashMap<String, Object>();
+        boolean error = true;
+        model.put("error", error);
+        model.put("template", "templates/user-edit.vtl");
+        return new ModelAndView(model, layout);
+      }
 
-      response.redirect("/sign-up");
-      return null;
     });
 
-    post("/user/:user_id/add-plant", (request, response) -> {
+    post("/user/:user_id/plant/:plant_id/add-plant", (request, response) -> {
 
-      int id = Integer.parseInt(request.queryParams("user_id"));
+      int id = Integer.parseInt(request.params("user_id"));
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
 
-      response.redirect("/user/:user_id/add-plant");
+      int plantId = Integer.parseInt(request.params("plant_id"));
+      Plant currentPlant = Plant.findById(plantId);
+      currentUser.addPlant(currentPlant);
+
+      response.redirect("/plant/" + plantId);
       return null;
     });
 

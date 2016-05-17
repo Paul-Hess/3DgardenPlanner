@@ -4,7 +4,23 @@
 </form>
 <a href="/user/$currentUser.getId()">My Profile</a>
 <a href="/user/$currentUser.getId()/gardens">My Gardens</a>
-#if($currentUser.isAdmin())
-<a href="/user/$currentUser.getId()/admin">Administration</a>
-#end	
+	#if($currentUser.isAdmin())
+	<a href="/user/$currentUser.getId()/admin">Administration</a>
+	#end	
 #end
+
+<div class="plant-detail">
+	<h3>$plant.getName()</h3>
+	<h4>$plant.getLatinName()</h4>
+	<p>$plant.getZone()</p>
+	<p>$plant.getHeight()</p>
+	<p>$plant.getWidth()</p>
+	<p>$plant.getSeason()</p>
+	<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
+
+	#if($authenticated)
+	<form action="/user/$currentUser.getId()/plant/$plant.getId()/add-plant" method="post">
+		<button type="submit" id="add-plant">Add this plant to my collection</button>
+	</form>
+	#end
+</div>

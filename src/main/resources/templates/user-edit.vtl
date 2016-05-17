@@ -71,3 +71,19 @@
 	
 	<button type="submit" id="update-password">Update</button>
 </form>
+
+<form action="/user/$currentUser.getId()/delete-account" method="post">
+	<h3 class="error">Caution! This cannot be undone, all of your data will be removed completely! Caution!</h3>
+		
+		<label for="account-email">Email: </label>
+		<input type="email" id="account-email" name="account-email" value="$currentUser.getEmail()">
+
+		<label for="account-password">Password: </label>
+		<input type="accopassword" id="account-password" name="account-password">
+
+		<label for="account-confirmation">Password Confirmation: </label>
+		<input type="password" id="account-confirmation" name="account-confirmation">
+
+		<button type="submit" id="delete-account">Remove My Account</button>
+	<h3 class="error">Caution! This cannot be undone, all of your data will be removed permanently! Caution!</h3>
+</form>

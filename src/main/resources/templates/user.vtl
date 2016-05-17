@@ -11,8 +11,24 @@
 		<div class="user-info">
 			<h4>User Name: $currentUser.getName()</h4>
 			<p>My Email: $currentUser.getEmail()</p>
-			<p>Member since: $currentUser.getCreatedAt().getYear() + 1900</p>
+			<p>Member since: $year</p>
 		</div>
 	</div>
+
+#foreach($plant in $myPlants)
+	<div class="my-plants">
+		<div class="plants-detail">
+			<a class="plant-link" href="/plant/$plant.getId()">	
+				<h3>$plant.getName()</h3>
+				<h4>$plant.getLatinName()</h4>
+				<p>$plant.getZone()</p>
+				<p>$plant.getHeight()</p>
+				<p>$plant.getWidth()</p>
+				<p>$plant.getSeason()</p>
+				<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
+			</a>
+		</div>
+	</div>
+#end
 
 
