@@ -315,6 +315,69 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("latin");
   }
 
+  @Test
+  public void adminPageShowsAllPlants() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testUser.setAdmin();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Administration"));
+    assertThat(pageSource()).contains("plant name");
+  }
+
+  @Test 
+  public void adminCanAddCompanionPlantToPlant() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("2name", "plantus2 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    Plant testPlant3 = new Plant("3name", "plantus3 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    Plant testPlant4 = new Plant("4name", "plantus4 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant4.save();
+    Plant testPlant5 = new Plant("5name", "plantus5 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant5.save();
+    testUser.setAdmin();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Administration"));
+    find("#plant-2name").click();
+    find("#companion-3name").click();
+    find("#companion-4name").click();
+    submit("#add-companion");
+    assertThat(find(".companion").contains("2name"));
+  }
+
+  @Test
+  public void removeCompanionPlant() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("2name", "plantus2 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    Plant testPlant3 = new Plant("3name", "plantus3 latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    testPlant2.addCompanion(testPlant3);
+    testUser.setAdmin();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Administration"));
+    submit("#remove-companion");
+    assertThat(pageSource()).doesNotContain(".companion");
+  }
+
+
   @Test 
   public void adminCanEditPlant() {
     User testUser = new User("userName", "user@example.com", "F00bar#");

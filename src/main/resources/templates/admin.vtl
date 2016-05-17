@@ -4,3 +4,39 @@
 <a href="/user/$currentUser.getId()">My Profile</a>
 <a href="/user/$currentUser.getId()/gardens">My Gardens</a>
 <a href="/user/$currentUser.getId()/plant-new">Add Plant</a>
+
+
+#foreach ($plant in $plants)
+	<div class="plant-detail">
+		<h3>$plant.getName()</h3>
+		<h4>$plant.getLatinName()</h4>
+		<p>$plant.getZone()</p>
+		<p>$plant.getHeight()</p>
+		<p>$plant.getWidth()</p>
+		<p>$plant.getSeason()</p>
+		<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
+
+		#foreach($companion on $plant.getCompanions())
+			<h3 class="companion">$companion.getName()</h3>
+			<form action="user/$currentUser.getId()/plant/$plant.getId()/companion/$compnanion.getId()/remove-companion" method="post">
+				<button type="submit" id="remove-companion">Remove</button>
+			</form>
+		#end
+	</div>
+	<hr>
+#end
+
+<form action="/user/$currentUser.getId()/admin/add-companion" method="post">
+	<h4>Add a companion to this plant</h4>
+	#foreach($plant in $plants)
+		<label for="plant-$plant.getName()">$plant.getName()</label>
+		<input type="radio" name="plant" id="plant-$plant.getName()" value="$plant.getId()">
+	#end
+	<h4>Choose from these options: </h4>
+	#foreach($plant in $plants)
+		<label for="companion-$plant.getName()">$plant.getName()</label>
+		<input type="checkbox" id="companion-$plant.getName()" name="companions" value="$plant.getId()">
+	#end
+
+	<button type="submit" id="add-companion">Add Companion</button>
+</form>

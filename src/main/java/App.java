@@ -95,6 +95,8 @@ public class App {
       model.put("currentUser", currentUser);
       request.session().attribute("authenticated", currentUser);
 
+      model.put("plants", Plant.all());
+
       model.put("template", "templates/admin.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -533,6 +535,27 @@ public class App {
       currentUser.addPlant(currentPlant);
 
       response.redirect("/plant/" + plantId);
+      return null;
+    });
+
+    post("/user/:user_id/admin/add-companion", (request, response) -> {
+
+      int id = Integer.parseInt(request.params("user_id"));
+      User currentUser = User.findById(id);
+      request.session().attribute("authenticated", currentUser);
+
+      int plantId = Integer.parseInt(request.queryParams("plant"));
+      String[] companions = request.queryParamsValues("companions");
+      Plant mainPlant = Plant.findById(plantId);
+
+      for(String companionId : companions) {
+        int intId = Integer.parseInt(companionId);
+        Plant companion = Plant.findById(intId);
+        mainPlant.addCompanion(companion);
+      }
+
+
+      response.redirect("/user/" + id + "/admin");
       return null;
     });
 
