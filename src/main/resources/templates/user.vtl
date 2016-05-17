@@ -1,10 +1,17 @@
-
+<form action="/user/$currentUser.getId()/log-out" method="post">
+	<button type="submit" id="logout-button">Log Out</button>
+</form>
+<a href="/user/$currentUser.getId()">My Profile</a>
+<a href="/user/$currentUser.getId()/gardens">My Gardens</a>
+#if($currentUser.isAdmin())
+<a href="/user/$currentUser.getId()/admin">Administration</a>
+#end	
 
 	<div class="user-container">
 		<div class="user-info">
 			<h4>User Name: $currentUser.getName()</h4>
 			<p>My Email: $currentUser.getEmail()</p>
-			<p>Member since: $currentUser.getCreatedAt().getYear()</p>
+			<p>Member since: $currentUser.getCreatedAt().getYear() + 1900</p>
 		</div>
 	</div>
 

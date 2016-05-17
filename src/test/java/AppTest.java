@@ -54,7 +54,7 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("plantus latinii");
   }
 
-  // routes are protected
+  // routes are protected when not logged in.
 
   @Test 
   public void cantGoToUserPage() {
@@ -222,7 +222,58 @@ public class AppTest extends FluentTest {
     fill("#pass-confirmation").with("F00bar");
     submit("#login-button");
     assertThat(pageSource()).contains("Error: Either password or email input did not match!");
+  }
 
+  @Test 
+  public void LoginErrorWrongEmail() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@exampl.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    assertThat(pageSource()).contains("Error: Either password or email input did not match!");
+  }
+
+  @Test 
+  public void LogoutLogsoutUser() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    submit("#logout-button");
+    assertThat(pageSource()).contains("Log In");
+    assertThat(pageSource()).doesNotContain("userName");
+  }
+
+  @Test
+  public void LogoutRemovesSessionAuth() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    submit("#logout-button");
+    goTo("http://localhost:4567/user/" + testUser.getId());
+    assertThat(pageSource()).contains("you must be logged in to view this page!");
+  }
+
+  @Test 
+  public void noAdminLinkForNonAdmin() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    assertThat(pageSource()).doesNotContain("Administration");
   }
 
 

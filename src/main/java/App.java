@@ -13,17 +13,56 @@ public class App {
     get("/", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/home.vtl");
+      if(!(request.session().attribute("authenticated") instanceof User)) {
+        boolean notAuth = true;
+        model.put("notAuth", notAuth);
+      } 
+
+      if(request.session().attribute("authenticated") instanceof User) {
+          boolean notAuth = false;
+          boolean authenticated = true;
+          User currentUser = request.session().attribute("authenticated");
+          model.put("notAuth", notAuth);
+          model.put("currentUser", currentUser);
+          model.put("authenticated", authenticated);
+          request.session().attribute("authenticated", currentUser);
+        }
+
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/sign-up", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+        if(!(request.session().attribute("authenticated") instanceof User)) {
+          boolean notAuth = true;
+          model.put("notAuth", notAuth);
+        }
+
+        if(request.session().attribute("authenticated") instanceof User) {
+          boolean notAuth = false;
+          User currentUser = request.session().attribute("authenticated");
+          model.put("notAuth", notAuth);
+          request.session().attribute("authenticated", currentUser);
+        }
+
     	model.put("template", "templates/sign-up.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/log-in", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+        if(!(request.session().attribute("authenticated") instanceof User)) {
+            boolean notAuth = true;
+            model.put("notAuth", notAuth);
+        }
+
+        if(request.session().attribute("authenticated") instanceof User) {
+            boolean notAuth = false;
+            User currentUser = request.session().attribute("authenticated");
+            model.put("notAuth", notAuth);
+            request.session().attribute("authenticated", currentUser);
+        }
+
     	model.put("template", "templates/log-in.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -36,7 +75,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		authenticated = true;
+            authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -49,7 +88,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		authenticated = true;
+            authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -62,6 +101,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
+
     		if(currentUser.isAdmin()) {
     			authenticated = true;
     		}
@@ -77,6 +117,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
+
     		if(currentUser.isAdmin()) {
     			authenticated = true;
     		}
@@ -92,6 +133,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
+
     		if(currentUser.isAdmin()) {
     			authenticated = true;
     		}
@@ -108,9 +150,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		if(currentUser.isAdmin()) {
-    			authenticated = true;
-    		}
+    		authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -123,9 +163,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		if(currentUser.isAdmin()) {
-    			authenticated = true;
-    		}
+    		authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -138,9 +176,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		if(currentUser.isAdmin()) {
-    			authenticated = true;
-    		}
+    		authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -153,9 +189,7 @@ public class App {
     	User currentUser = User.findById(userId);
     	User loggedInUser = request.session().attribute("authenticated");
     	if(currentUser.equals(loggedInUser)) {
-    		if(currentUser.isAdmin()) {
-    			authenticated = true;
-    		}
+    		authenticated = true;
     	}
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
@@ -169,12 +203,11 @@ public class App {
 
     get("/user/:user_id", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
-    	int userId = Integer.parseInt(request.params("user_id"));
-    	User currentUser = User.findById(userId);
-    	User loggedInUser = request.session().attribute("authenticated");
 
-    	model.put("authenticated", true);
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
     	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
 
     	model.put("template", "templates/user.vtl");
     	return new ModelAndView(model, layout);
@@ -182,6 +215,12 @@ public class App {
 
     get("/user/:user_id/admin", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/admin.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -189,30 +228,61 @@ public class App {
 
     get("/user/:user_id/edit", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/user-edit.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/user/:user_id/garden-new", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
+
     	model.put("template", "templates/garden-new.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/user/:user_id/gardens", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/gardens.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/user/:user_id/garden/:garden_id", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/garden.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/user/:user_id/garden/:garden_id/edit-garden", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/garden-edit.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -220,6 +290,22 @@ public class App {
     get("/plants", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
     	model.put("plants", Plant.all());
+
+        if(!(request.session().attribute("authenticated") instanceof User)) {
+            boolean notAuth = true;
+            model.put("notAuth", notAuth);
+        }
+
+        if(request.session().attribute("authenticated") instanceof User) {
+          boolean notAuth = false;
+          boolean authenticated = true;
+          User currentUser = request.session().attribute("authenticated");
+          model.put("notAuth", notAuth);
+          model.put("currentUser", currentUser);
+          model.put("authenticated", authenticated);
+          request.session().attribute("authenticated", currentUser);
+        }
+
     	model.put("template", "templates/plants.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -227,12 +313,34 @@ public class App {
     // admin only route
     get("/user/:user_id/plant-new", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/plant-new.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/plant/:plant_id", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+        if(!(request.session().attribute("authenticated") instanceof User)) {
+            boolean notAuth = true;
+            model.put("notAuth", notAuth);
+        }
+
+        if(request.session().attribute("authenticated") instanceof User) {
+          boolean notAuth = false;
+          boolean authenticated = true;
+          User currentUser = request.session().attribute("authenticated");
+          model.put("notAuth", notAuth);
+          model.put("currentUser", currentUser);
+          model.put("authenticated", authenticated);
+          request.session().attribute("authenticated", currentUser);
+        }
+
     	model.put("template", "templates/plant.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -240,6 +348,12 @@ public class App {
     // admin only route
     get("/user/:user_id/plant/:plant_id/edit-plant", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+    	model.put("currentUser", currentUser);
+        request.session().attribute("authenticated", currentUser);
+
+    	model.put("template", "templates/plant-edit.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -291,58 +405,109 @@ public class App {
     	}
     }, new VelocityTemplateEngine());
 
-    post("/log-out", (request, response) -> {
+    post("/user/:user_id/log-out", (request, response) -> {
+    	request.session().removeAttribute("authenticated");
     	response.redirect("/");
     	return null;
     });
 
     post("/user/:user_id/edit", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
+
     	response.redirect("/user/:user_id");
     	return null;
     });
 
     post("/user/:user_id/garden-new", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id/garden/:garden_id");
     	return null;
     });
 
     post("/user/:user_id/plant-new", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("user/:user_id/plant-new");
     	return null;
     });
 
     post("/user/:user_id/garden/:garden_id/edit-garden", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id/garden/:garden_id");
     	return null;
     });
 
     post("/user/:user_id/plant/:plant_id/edit-plant", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id/plant/:plant_id");
     	return null;
     });
 
     post("/user/:user_id/search-plants", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	model.put("template", "templates/search-results.vtl");
     	return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/user/:user_id/garden/:garden_id/plant/:plant_id/remove-garden-plant", (request, response) -> {
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id/garden/:garden_id/edit-garden");
     	return null;
     });
 
     post("/user/:user_id/garden/:garden_id/delete", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id");
     	return null;
     });
 
     post("/user/:user_id/delete-account", (request, response) -> {
+
+    	int id = Integer.parseInt(request.params("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/sign-up");
     	return null;
     });
 
     post("/user/:user_id/add-plant", (request, response) -> {
+
+    	int id = Integer.parseInt(request.queryParams("user_id"));
+    	User currentUser = User.findById(id);
+        request.session().attribute("authenticated", currentUser);
+
     	response.redirect("/user/:user_id/add-plant");
    		return null;
     });
