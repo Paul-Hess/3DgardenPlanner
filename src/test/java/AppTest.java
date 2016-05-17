@@ -335,10 +335,69 @@ public class AppTest extends FluentTest {
     fill("#height").with("4");
     fill("#width").with("3");
     fill("#season").with("summer");
-    fill("#icon-url").with("/ing/plant.jpg");
+    fill("#icon-url").with("/img/plant.jpg");
     submit("#update-plant");
     goTo("http://localhost:4567/plants");
     assertThat(pageSource()).contains("zone 1");
+  }
+
+  @Test 
+  public void userCanUpdateUserName() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/edit", testUser.getId());
+    goTo(url);
+    fill("#new-name").with("newName");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#update-username");
+    assertThat(pageSource()).contains("newName");
+  }
+
+  @Test 
+  public void userCanUpdateUserEmail() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/edit", testUser.getId());
+    goTo(url);
+    fill("#new-email").with("new@example.com");
+    fill("#old-email").with("user@example.com");
+    fill("#password").with("F00bar#");
+    fill("#password-confirm").with("F00bar#");
+    submit("#update-email");
+    assertThat(pageSource()).contains("new@example.com");
+  }
+
+  @Test 
+  public void userCanUpdateUserPassword() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/edit", testUser.getId());
+    goTo(url);
+    fill("#email").with("user@example.com");
+    fill("#old-password").with("F00bar#");
+    fill("#old-confirmation").with("F00bar#");
+    fill("#new-password").with("F00b@r#");
+    fill("#new-confirmation").with("F00b@r#");
+    submit("#update-password");
+    assertThat(pageSource()).contains("user@example.com");
+    assertThat(pageSource()).contains("userName");
   }
 
 }

@@ -6,3 +6,68 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+#if($error)
+	<h3 class="error">
+		Error: Password did not match confirmation!
+	</h3>
+#end
+#if($authFail)
+	<h3 class="error">
+		Error: Either password or email input did not match!
+	</h3>
+#end
+
+<form action="/user/$currentUser.getId()/edit-name" method="post">
+		
+	<label for="user-email">Email: </label>
+	<input type="email" id="user-email" name="user-email" value="$currentUser.getEmail()">
+
+	<label for="new-name">New Name: </label>
+	<input type="text" id="new-name" name="new-name" value="$currentUser.getName()">
+
+	<label for="user-password">Password: </label>
+	<input type="password" id="user-password" name="user-password">
+
+	<label for="pass-confirmation">Password Confirmation: </label>
+	<input type="password" id="pass-confirmation" name="pass-confirmation">
+	
+	<button type="submit" id="update-username">Update</button>
+</form>
+
+<form action="/user/$currentUser.getId()/edit-email" method="post">
+		
+	<label for="old-email">Old Email: </label>
+	<input type="email" id="old-email" name="old-email" value="$currentUser.getEmail()">
+
+	<label for="new-email">Old Email: </label>
+	<input type="email" id="new-email" name="new-email" value="$currentUser.getEmail()">
+
+	<label for="password">Password: </label>
+	<input type="password" id="password" name="password">
+
+	<label for="password-confirm">Password Confirmation: </label>
+	<input type="password" id="password-confirm" name="password-confirm">
+	
+	<button type="submit" id="update-email">Update</button>
+</form>
+
+<form action="/user/$currentUser.getId()/edit-password" method="post">
+		
+	<label for="email">Email: </label>
+	<input type="email" id="email" name="email" value="$currentUser.getEmail()">
+
+	<label for="old-password">Type Old Password: </label>
+	<input type="password" id="old-password" name="old-password">
+
+	<label for="old-confirmation">Old Password Confirmation: </label>
+	<input type="password" id="old-confirmation" name="old-confirmation">
+
+	<label for="new-password">New Password: </label>
+	<input type="password" id="new-password" name="new-password">
+
+	<label for="new-confirmation">New Password Confirmation: </label>
+	<input type="password" id="new-confirmation" name="new-confirmation">
+	
+	<button type="submit" id="update-password">Update</button>
+</form>
