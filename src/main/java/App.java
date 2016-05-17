@@ -314,7 +314,7 @@ public class App {
     get("/user/:user_id/plant-new", (request, response) -> {
     	Map<String, Object> model = new HashMap<String, Object>();
 
-    	int id = Integer.parseInt(request.params("user_id"));
+        int id = Integer.parseInt(request.params("user_id"));
     	User currentUser = User.findById(id);
     	model.put("currentUser", currentUser);
         request.session().attribute("authenticated", currentUser);
@@ -350,6 +350,9 @@ public class App {
     	Map<String, Object> model = new HashMap<String, Object>();
     	int id = Integer.parseInt(request.params("user_id"));
     	User currentUser = User.findById(id);
+        int plantId = Integer.parseInt(request.params("plant_id"));
+        Plant plant = Plant.findById(plantId);
+        model.put("plant", plant);
     	model.put("currentUser", currentUser);
         request.session().attribute("authenticated", currentUser);
 
@@ -434,11 +437,22 @@ public class App {
 
     post("/user/:user_id/plant-new", (request, response) -> {
 
+        String plantName = request.queryParams("plant-name");
+        String latinName = request.queryParams("latin-name");
+        String zone = request.queryParams("zone");
+        int height = Integer.parseInt(request.queryParams("height"));
+        int width = Integer.parseInt(request.queryParams("width"));
+        String season = request.queryParams("season");
+        String icon = request.queryParams("icon-url");
+
+        Plant newPlant = new Plant(plantName, latinName, zone, height, width, season, icon);
+        newPlant.save();
+
     	int id = Integer.parseInt(request.params("user_id"));
     	User currentUser = User.findById(id);
         request.session().attribute("authenticated", currentUser);
 
-    	response.redirect("user/:user_id/plant-new");
+    	response.redirect("/user/" + currentUser.getId() +"/plant-new");
     	return null;
     });
 
@@ -457,8 +471,21 @@ public class App {
     	int id = Integer.parseInt(request.params("user_id"));
     	User currentUser = User.findById(id);
         request.session().attribute("authenticated", currentUser);
+        int plantId = Integer.parseInt(request.params("plant_id"));
+        Plant plant = Plant.findById(plantId);
 
-    	response.redirect("/user/:user_id/plant/:plant_id");
+        String plantName = request.queryParams("plant-name");
+        String latinName = request.queryParams("latin-name");
+        String zone = request.queryParams("zone");
+        int height = Integer.parseInt(request.queryParams("height"));
+        int width = Integer.parseInt(request.queryParams("width"));
+        String season = request.queryParams("season");
+        String icon = request.queryParams("icon-url");
+
+        plant.update(plantName, latinName, zone, height, width, season, icon);
+
+        String url = String.format("/user/%d/plant/%d", currentUser.getId(), plant.getId());
+    	response.redirect(url);
     	return null;
     });
 

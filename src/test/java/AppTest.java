@@ -276,5 +276,69 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).doesNotContain("Administration");
   }
 
+  @Test 
+  public void blocksUserPageIfIsWrongUserLoggedIn() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    User testUser2 = new User("userName2", "user2@example.com", "F00bar#");
+    testUser2.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    goTo("http://localhost:4567/user/" + testUser2.getId());
+    assertThat(pageSource()).contains("you must be logged in to view this page!");
+  }
+
+  @Test 
+  public void adminCanCreatePlant() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    testUser.setAdmin();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Administration"));
+    click("a", withText("Add Plant"));
+    fill("#plant-name").with("plant");
+    fill("#latin-name").with("latin");
+    fill("#zone").with("zone 1");
+    fill("#height").with("4");
+    fill("#width").with("3");
+    fill("#season").with("summer");
+    fill("#icon-url").with("/ing/plant.jpg");
+    submit("#create-plant");
+    goTo("http://localhost:4567/plants");
+    assertThat(pageSource()).contains("latin");
+  }
+
+  @Test 
+  public void adminCanEditPlant() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testUser.setAdmin();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/plant/%d/edit-plant", testUser.getId(), testPlant.getId());
+    goTo(url);
+    fill("#plant-name").with("plant");
+    fill("#latin-name").with("latin");
+    fill("#zone").with("zone 1");
+    fill("#height").with("4");
+    fill("#width").with("3");
+    fill("#season").with("summer");
+    fill("#icon-url").with("/ing/plant.jpg");
+    submit("#update-plant");
+    goTo("http://localhost:4567/plants");
+    assertThat(pageSource()).contains("zone 1");
+  }
 
 }

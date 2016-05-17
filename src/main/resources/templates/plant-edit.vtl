@@ -6,3 +6,29 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+
+<form action="/user/$currentUser.getId()/plant/$plant.getId()/edit-plant" method="post">
+	<label for="plant-name"></label>
+	<input type="text" id="plant-name" name="plant-name" value="$plant.getName()">
+
+	<label for="latin-name"></label>
+	<input type="text" id="latin-name" name="latin-name" value="$plant.getLatinName()">
+
+	<label for="zone"></label>
+	<input type="text" id="zone" name="zone" value="$plant.getZone()">
+
+	<label for="height"></label>
+	<input type="number" id="height" name="height" value="$plant.getHeight()">
+
+	<label for="width"></label>
+	<input type="number" id="width" name="width" value="$plant.getWidth()">
+
+	<label for="season"></label>
+	<input type="text" id="season" name="season" value="$plant.getSeason()">
+
+	<label for="icon-url"></label>
+	<input type="text" id="icon-url" name="icon-url" value="$plant.getIcon()">
+
+	<button type="submit" id="update-plant">Submit</button>
+</form>
+
