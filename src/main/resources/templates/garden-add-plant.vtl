@@ -7,12 +7,15 @@
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
 
-<form action="/user/currentUser.getId()/garden/$garden.getId()/delete" method="post">
-	<button type="submit" id="delete-garden">Delete this garden</button>
-</form>
 
 $currentGarden.getName()
 
 <h3>Add plants to your garden here:</h3>
-#foreach($plant in $plants)
-#end
+<form action="/user/$currentUser.getId()/garden/$currentGarden.getId()/add-plant" method="post">
+	#foreach($plant in $plants)
+		<label for="$plant.getLatinName().replace(' ', '')"></label>
+		<input id="$plant.getLatinName().replace(' ', '')" type="radio" name="plant" value="$plant.getId()">
+	#end
+	<button type="submit" id="add-plant">Add this plant</button>
+	<p>at $nextPositionNorth degrees North and $nextPositionWest degrees West in your garden plan grid.</p>
+</form>

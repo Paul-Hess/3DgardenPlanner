@@ -469,13 +469,13 @@ public class App {
       String thisGet = String.format("/user/%d/garden/%d/add-plant", currentUser.getId(), currentGarden.getId());
       String gardenPage = String.format("/user/%d/garden/%d", currentUser.getId(), currentGarden.getId());
 
-      if(currentGarden.checkAvailableGround() > 1) {
+      if(currentGarden.checkAvailableGround() < 1) {
         response.redirect(gardenPage);
       } else {
         int plantId = Integer.parseInt(request.queryParams("plant"));
         Plant currentPlant = Plant.findById(plantId);
         currentGarden.addPlant(currentPlant);
-        if(currentGarden.checkAvailableGround() > 1) {
+        if(currentGarden.checkAvailableGround() < 1) {
           response.redirect(gardenPage);
         } else {
           response.redirect(thisGet);

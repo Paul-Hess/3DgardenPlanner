@@ -549,4 +549,24 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).doesNotContain("garden name");
   }
 
+  @Test public void userCanAddPlantsToGarden() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Create A New Garden Plot"));
+    fill("#garden-name").with("new garden1");
+    fill("#length").with("2");
+    fill("#width").with("2");
+    submit("#create-garden");
+    find("#plantuslatinii").click();
+    submit("#add-plant");
+    assertThat(pageSource()).contains("plant name");
+  }
+
 }

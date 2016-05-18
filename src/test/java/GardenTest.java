@@ -131,7 +131,7 @@ public class GardenTest {
   }
 
   @Test 
-  public void checkAvailableGround_checksIfThereIsMoreGroundSpaceInTheGardenForPlants_false() {
+  public void checkAvailableGround_checksIfThereIsMoreGroundSpaceInTheGardenForPlants_0() {
     Garden testGarden2 = new Garden("garden name", 4, 25, 1);
     testGarden2.save();
     Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");

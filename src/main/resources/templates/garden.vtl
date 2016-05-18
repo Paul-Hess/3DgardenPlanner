@@ -7,9 +7,13 @@
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
 
-<div width="$garden.getWidth()vw" height="$garden.getLength()vh"  class="garden-detail">
 	<h3>$garden.getName()</h3>
-
+<div width="$garden.getWidth()vw" height="$garden.getLength()vh"  class="garden-detail">
+	#foreach($plant in $garden.getPlants())
+		<div class="gardenplant-detail" width="$plant.getWidth" height="$plant.getWidth">
+			<p>$plant.getName()</p>
+		</div>
+	#end
 </div>
 
 <a href="/user/$currentUser.getId()/garden/$garden.getId()/edit-garden">Edit this Garden</a>
