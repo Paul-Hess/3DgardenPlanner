@@ -569,4 +569,54 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("plant name");
   }
 
+  @Test 
+  public void showsUserOnlyPlantsThatWillFitInGardenAvailableSpace() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    Plant testPlant2 = new Plant("plant name2", "plantae latinata", "west 3", 3, 2, "summer", "pathTo/plantimage2.jpg");
+    testPlant2.save();
+    Plant testPlant3 = new Plant("plant name3", "plantorum latinus", "west 3", 3, 6, "summer", "pathTo/plantimage3.jpg");
+    testPlant3.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    click("a", withText("Create A New Garden Plot"));
+    fill("#garden-name").with("new garden1");
+    fill("#length").with("4");
+    fill("#width").with("2");
+    submit("#create-garden");
+    find("#plantuslatinii").click();
+    submit("#add-plant");
+    assertThat(pageSource()).contains("plant name2");
+    assertThat(pageSource()).doesNotContain("plant name3");
+  }
+
+  @Test 
+  public void userCanUpdateGardenSwitchPlants() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Garden testGarden = new Garden("garden name", 4, 4, testUser.getId());
+    testGarden.save();
+    Plant testPlant2 = new Plant("plant name2", "a", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    Plant testPlant3 = new Plant("plant name3", "b", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    testGarden.addPlant(testPlant2);
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = String.format("http://localhost:4567/user/%d/garden/%d/edit-garden", testUser.getId(), testGarden.getId());
+    goTo(url);
+    find("#a").click();
+    find("#new-b").click();
+    submit("#update-gardenplant");
+    assertThat(pageSource()).contains("plant name3");
+  }
+
 }

@@ -113,6 +113,18 @@ public class GardenTest {
   }
 
   @Test 
+  public void getPlants_ordersByListPosition_0() {
+    testGarden.save();
+    Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant.save();
+    testGarden.addPlant(testPlant);
+    Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
+    testPlant2.save();
+    testGarden.addPlant(testPlant2);
+    assertEquals(testGarden.getPlants().get(0), testPlant);
+  }
+
+  @Test 
   public void addPlant_savesInstanceOfGardensPlants_Plant() {
     testGarden.save();
     Plant testPlant = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg");
@@ -227,6 +239,33 @@ public class GardenTest {
     testGarden.addPlant(testPlant6);
     testGarden.addPlant(testPlant7);
     assertEquals(testGarden.getNextPositionNorth(), 2);
+  }
+
+  @Test 
+  public void updatesGardenKeepingPlantsInProperPosition() {
+    testGarden.save();
+    Plant testPlant2 = new Plant("plant name2", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    Plant testPlant3 = new Plant("plant name3", "plantus latinii", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg");
+    testPlant3.save();
+    Plant testPlant4 = new Plant("plant name4", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant4.save();
+    Plant testPlant5 = new Plant("plant name5", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant5.save();
+    Plant testPlant6 = new Plant("plant name6", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant6.save();
+    Plant testPlant7 = new Plant("plant name7", "plantus latinii", "west 3", 3, 1, "summer", "pathTo/plantimage.jpg");
+    testPlant7.save();
+    Plant testPlant8 = new Plant("plant name8", "plantus latinii", "west 3", 3, 5, "summer", "pathTo/plantimage.jpg");
+    testPlant8.save();
+    testGarden.addPlant(testPlant2);
+    testGarden.addPlant(testPlant3);
+    testGarden.addPlant(testPlant4);
+    testGarden.addPlant(testPlant5);
+    testGarden.addPlant(testPlant6);
+    testGarden.addPlant(testPlant7);
+    testGarden.updateGardenPlant(testPlant5, testPlant8, testGarden.getPlants().indexOf(testPlant5));
+    assertEquals(testGarden.getPlants().get(3), testPlant8);
   }
 
 

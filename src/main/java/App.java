@@ -170,6 +170,8 @@ public class App {
       Garden currentGarden = Garden.findById(gardenId);
       model.put("garden", currentGarden);
 
+      model.put("allPlants", Plant.all());
+
       model.put("template", "templates/garden-edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -511,7 +513,17 @@ public class App {
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
 
-      response.redirect("/user/:user_id/garden/:garden_id");
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+
+      int oldPlantId = Integer.parseInt(request.queryParams("to-replace"));
+      Plant oldPlant = Plant.findById(oldPlantId);
+      int newPlantId = Integer.parseInt(request.queryParams("replacement"));
+      Plant newPlant = Plant.findById(newPlantId);
+      currentGarden.updateGardenPlant(oldPlant, newPlant, currentGarden.getPlants().indexOf(oldPlant));
+
+      String responseUrl = String.format("/user/%d/garden/%d", id, gardenId);
+      response.redirect(responseUrl);
       return null;
     });
 

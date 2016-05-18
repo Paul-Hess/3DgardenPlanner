@@ -7,6 +7,25 @@
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
 
-<form action="/user/currentUser.getId()/garden/$garden.getId()/delete" method="post">
+
+<form action="/user/$currentUser.getId()/garden/$garden.getId()/edit-garden" method="post">
+	#foreach($plant in $garden.getPlants())
+		<p>replace this plant: </p>
+		<label for="$plant.getLatinName().replace(' ','')">$plant.getName()</label>
+		<input type="radio" name="to-replace" id="$plant.getLatinName().replace(' ', '')" value="$plant.getId()">
+		#foreach($replacement in $allPlants)
+			#if($replacement.getWidth() == $plant.getWidth())
+				<p>with this plant: </p>
+				<label for="new-$replacement.getLatinName().replace(' ','')">$replacement.getName()</label>
+				<input type="radio" name="replacement" id="new-$replacement.getLatinName().replace(' ', '')" value="$replacement.getId()">
+			#end
+		#end
+	#end
+
+
+	<button type="submit" id="#update-gardenplant">Update</button>
+</form>
+
+<form action="/user/$currentUser.getId()/garden/$garden.getId()/delete" method="post">
 	<button type="submit" id="delete-garden">Delete this garden</button>
 </form>

@@ -13,7 +13,7 @@ $currentGarden.getName()
 <h3>Add plants to your garden here:</h3>
 <form action="/user/$currentUser.getId()/garden/$currentGarden.getId()/add-plant" method="post">
 	#foreach($plant in $plants)
-		<label for="$plant.getLatinName().replace(' ', '')"></label>
+		<label for="$plant.getLatinName().replace(' ', '')">$plant.getName()</label>
 		<input id="$plant.getLatinName().replace(' ', '')" type="radio" name="plant" value="$plant.getId()">
 	#end
 	<button type="submit" id="add-plant">Add this plant</button>

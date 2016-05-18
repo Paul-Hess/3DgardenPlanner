@@ -79,13 +79,15 @@ public class Garden {
 
 	public void addPlant(Plant newPlant) {
 		try(Connection con = DB.sql2o.open()) {
-			String join = "INSERT INTO gardens_plants (garden_id, plant_id) VALUES (:id, :plant_id);";
+			String join = "INSERT INTO gardens_plants (garden_id, plant_id, list_position) VALUES (:id, :plant_id, :list_position);";
 			con.createQuery(join)
 				.addParameter("id", this.id)
 				.addParameter("plant_id", newPlant.getId())
+				.addParameter("list_position", this.getPlants().size())
 				.executeUpdate();
 		}
 	}
+
 
 	public int checkAvailableGround() {
 		int area = this.getLength() * this.getWidth();
@@ -118,7 +120,7 @@ public class Garden {
 
 	public List<Plant> getPlants() {
 		try(Connection con = DB.sql2o.open()) {
-			String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id;";
+			String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id ORDER BY list_position ASC;";
 			return con.createQuery(joinQuery)
 				.addParameter("id", this.id)
 				.executeAndFetch(Plant.class);
@@ -129,9 +131,8 @@ public class Garden {
 	public List<Plant> findByAvailableGround(int availableSpace) {
 		double root = Math.sqrt(availableSpace);
 		try(Connection con = DB.sql2o.open()) {
-			String joinQuery = "SELECT plants.* FROM gardens JOIN gardens_plants ON (gardens.id = gardens_plants.garden_id) JOIN plants ON (gardens_plants.plant_id = plants.id) WHERE gardens.id=:id AND plants.average_width <= :availableSpace;";
+			String joinQuery = "SELECT * FROM plants WHERE average_width <= :availableSpace;";
 			return con.createQuery(joinQuery)
-				.addParameter("id", this.id)
 				.addParameter("availableSpace", root)
 				.executeAndFetch(Plant.class);
 		}
@@ -173,6 +174,17 @@ public class Garden {
 					.addParameter("new_length", new_length)
 					.addParameter("updated_at", new Timestamp(new Date().getTime()))
 					.executeUpdate();	
+		}
+	}
+
+	public void updateGardenPlant(Plant oldPlant, Plant newPlant, int list_position) {
+		try(Connection con = DB.sql2o.open()) {
+			String join = "UPDATE gardens_plants SET plant_id=:newPlantId WHERE plant_id=:oldPlantId AND list_position=:list_position;";
+			con.createQuery(join) 
+				.addParameter("newPlantId", newPlant.getId())
+				.addParameter("oldPlantId", oldPlant.getId())
+				.addParameter("list_position", list_position)
+				.executeUpdate();
 		}
 	}
 
