@@ -174,6 +174,36 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/user/:user_id/garden/:garden_id/add-plant", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+
+      int id = Integer.parseInt(request.params("user_id"));
+      User currentUser = User.findById(id);
+      model.put("currentUser", currentUser);
+      request.session().attribute("authenticated", currentUser);
+
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+      model.put("currentGarden", currentGarden);
+      int nextPositionNorth = 0;
+      int nextPositionWest = 0;
+
+      if(currentGarden.getPlants().size() == 0) {
+        model.put("plants", Plant.all());
+        model.put("nextPositionNorth", nextPositionNorth);
+        model.put("nextPositionWest", nextPositionWest);
+      } else if (currentGarden.checkAvailableGround() > 0) {
+        nextPositionNorth = currentGarden.getNextPositionNorth();
+        nextPositionWest = currentGarden.getNextPositionWest();
+        model.put("nextPositionNorth", nextPositionNorth);
+        model.put("nextPositionWest", nextPositionWest);
+        model.put("plants", currentGarden.findByAvailableGround(currentGarden.checkAvailableGround()));
+      }
+
+      model.put("template", "templates/garden-add-plant.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
     get("/plants", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("plants", Plant.all());
@@ -422,10 +452,36 @@ public class App {
       Garden newGarden = new Garden(name, length, width, id);
       newGarden.save();
 
-      String responseUrl = String.format("/user/%d/garden/%d", id, newGarden.getId());
 
+      String responseUrl = String.format("/user/%d/garden/%d/add-plant", id, newGarden.getId());
       response.redirect(responseUrl);
       return null;
+    }, new VelocityTemplateEngine());
+
+    post("/user/:user_id/garden/:garden_id/add-plant", (request, response) -> {
+
+      int id = Integer.parseInt(request.params("user_id"));
+      User currentUser = User.findById(id);
+      request.session().attribute("authenticated", currentUser);
+
+      int gardenId = Integer.parseInt(request.params("garden_id"));
+      Garden currentGarden = Garden.findById(gardenId);
+      String thisGet = String.format("/user/%d/garden/%d/add-plant", currentUser.getId(), currentGarden.getId());
+      String gardenPage = String.format("/user/%d/garden/%d", currentUser.getId(), currentGarden.getId());
+
+      if(currentGarden.checkAvailableGround() > 1) {
+        response.redirect(gardenPage);
+      } else {
+        int plantId = Integer.parseInt(request.queryParams("plant"));
+        Plant currentPlant = Plant.findById(plantId);
+        currentGarden.addPlant(currentPlant);
+        if(currentGarden.checkAvailableGround() > 1) {
+          response.redirect(gardenPage);
+        } else {
+          response.redirect(thisGet);
+        }
+      }
+      return null; 
     });
 
     post("/user/:user_id/plant-new", (request, response) -> {
@@ -710,6 +766,19 @@ public class App {
     	if(!authenticated) {
     		halt(401, "you must be logged in to view this page!");
     	}
+    });
+
+    before("/user/:user_id/garden/:garden_id/add-plant", (request, response) -> {
+      boolean authenticated = false;
+      int userId = Integer.parseInt(request.params("user_id"));
+      User currentUser = User.findById(userId);
+      User loggedInUser = request.session().attribute("authenticated");
+      if(currentUser.equals(loggedInUser)) {
+        authenticated = true;
+      }
+      if(!authenticated) {
+        halt(401, "you must be logged in to view this page!");
+      }
     });
 
     // ======================================================= //

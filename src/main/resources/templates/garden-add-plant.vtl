@@ -1,0 +1,18 @@
+	<form action="/user/$currentUser.getId()/log-out" method="post">
+	<button type="submit" id="logout-button">Log Out</button>
+</form>
+<a href="/user/$currentUser.getId()">My Profile</a>
+<a href="/user/$currentUser.getId()/gardens">My Gardens</a>
+#if($currentUser.isAdmin())
+<a href="/user/$currentUser.getId()/admin">Administration</a>
+#end	
+
+<form action="/user/currentUser.getId()/garden/$garden.getId()/delete" method="post">
+	<button type="submit" id="delete-garden">Delete this garden</button>
+</form>
+
+$currentGarden.getName()
+
+<h3>Add plants to your garden here:</h3>
+#foreach($plant in $plants)
+#end

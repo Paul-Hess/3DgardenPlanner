@@ -512,6 +512,7 @@ public class AppTest extends FluentTest {
     fill("#width").with("12");
     submit("#create-garden");
     assertThat(pageSource()).contains("new garden1");
+    assertThat(pageSource()).contains("Add plants to your garden here:");
   }
 
   @Test

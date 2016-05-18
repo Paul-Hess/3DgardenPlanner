@@ -150,7 +150,7 @@ public class GardenTest {
   }
 
   @Test 
-  public void findByArea_returnsPlantsOfAGivenSize() {
+  public void findByAvailableGround_returnsPlantsOfAGivenSize_PlantArray() {
     testGarden.save();
     Plant testPlant2 = new Plant("plant name", "plantus latinii", "west 3", 3, 2, "summer", "pathTo/plantimage.jpg"); 
     testPlant2.save();
