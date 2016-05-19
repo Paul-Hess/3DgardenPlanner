@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 import static spark.Spark.*;
@@ -550,16 +551,78 @@ public class App {
       return null;
     });
 
-    post("/user/:user_id/search-plants", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
-
+    post("/user/:user_id/garden/:garden_id/plant/:plant_id/remove-garden-plant", (request, response) -> {
       int id = Integer.parseInt(request.params("user_id"));
       User currentUser = User.findById(id);
       request.session().attribute("authenticated", currentUser);
 
+      response.redirect("/user/:user_id/garden/:garden_id/edit-garden");
+      return null;
+    });
+
+    post("/plants/search-name", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+
+      if(request.session().attribute("authenticated") instanceof User) {
+        request.session().attribute("authenticated", request.session().attribute("authenticated"));
+      }
+
+      String search = request.queryParams("search-name");
+      List<Plant> searchResults = Plant.findByName(search);
+      model.put("searchResults", searchResults);
+
       model.put("template", "templates/search-results.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+
+    post("/plants/search-latin", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+
+      if(request.session().attribute("authenticated") instanceof User) {
+        request.session().attribute("authenticated", request.session().attribute("authenticated"));
+      }
+
+      String search = request.queryParams("search-latin");
+      List<Plant> searchResults = Plant.findByLatinName(search);
+      model.put("searchResults", searchResults);
+
+      model.put("template", "templates/search-results.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+
+    post("/plants/search-zone", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+
+      if(request.session().attribute("authenticated") instanceof User) {
+        request.session().attribute("authenticated", request.session().attribute("authenticated"));
+      }
+
+      String search = request.queryParams("search-zone");
+      List<Plant> searchResults = Plant.findByZone(search);
+      model.put("searchResults", searchResults);
+
+      model.put("template", "templates/search-results.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+
+    post("/plants/search-season", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+
+      if(request.session().attribute("authenticated") instanceof User) {
+        request.session().attribute("authenticated", request.session().attribute("authenticated"));
+      }
+
+      String search = request.queryParams("search-season");
+      List<Plant> searchResults = Plant.findBySeason(search);
+      model.put("searchResults", searchResults);
+
+      model.put("template", "templates/search-results.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
 
     post("/user/:user_id/garden/:garden_id/plant/:plant_id/remove-garden-plant", (request, response) -> {
       int id = Integer.parseInt(request.params("user_id"));
@@ -569,6 +632,7 @@ public class App {
       response.redirect("/user/:user_id/garden/:garden_id/edit-garden");
       return null;
     });
+
 
     post("/user/:user_id/garden/:garden_id/delete", (request, response) -> {
 

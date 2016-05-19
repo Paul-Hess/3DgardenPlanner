@@ -619,4 +619,76 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("plant name3");
   }
 
+
+  @Test 
+  public void userCanFindPlantsByName() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("plant name2", "a", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = "http://localhost:4567/plants";
+    goTo(url);
+    fill("#search-name").with("ame2");
+    submit("#by-name");
+    assertThat(pageSource()).contains("plant name2");
+  }
+
+  @Test 
+  public void userCanFindPlantsByZone() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("plant name2", "a", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = "http://localhost:4567/plants";
+    goTo(url);
+    fill("#search-zone").with("west 3");
+    submit("#by-zone");
+    assertThat(pageSource()).contains("plant name2");
+  }
+
+  @Test 
+  public void userCanFindPlantsBySeason() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("plant name2", "a", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = "http://localhost:4567/plants";
+    goTo(url);
+    fill("#search-season").with("summer");
+    submit("#by-season");
+    assertThat(pageSource()).contains("plant name2");
+  }
+
+  @Test 
+  public void userCanFindPlantsByLatinName() {
+    User testUser = new User("userName", "user@example.com", "F00bar#");
+    testUser.save();
+    Plant testPlant2 = new Plant("plant name2", "latinata", "west 3", 3, 4, "summer", "pathTo/plantimage.jpg"); 
+    testPlant2.save();
+    goTo("http://localhost:4567/log-in");
+    fill("#user-email").with("user@example.com");
+    fill("#user-password").with("F00bar#");
+    fill("#pass-confirmation").with("F00bar#");
+    submit("#login-button");
+    String url = "http://localhost:4567/plants";
+    goTo(url);
+    fill("#search-latin").with("lati");
+    submit("#by-latin");
+    assertThat(pageSource()).contains("plant name2");
+  }
 }
