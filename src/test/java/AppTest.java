@@ -29,8 +29,6 @@ public class AppTest extends FluentTest {
     goTo("http://localhost:4567/");
   }
 
-  // routes
-
   @Test 
   public void getSignUpPage() {
     goTo("http://localhost:4567/");
@@ -53,8 +51,6 @@ public class AppTest extends FluentTest {
     click("a", withText("Browse Plants"));
     assertThat(pageSource()).contains("plantus latinii");
   }
-
-  // routes are protected when not logged in.
 
   @Test 
   public void cantGoToUserPage() {

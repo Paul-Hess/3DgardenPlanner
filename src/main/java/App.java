@@ -551,15 +551,6 @@ public class App {
       return null;
     });
 
-    post("/user/:user_id/garden/:garden_id/plant/:plant_id/remove-garden-plant", (request, response) -> {
-      int id = Integer.parseInt(request.params("user_id"));
-      User currentUser = User.findById(id);
-      request.session().attribute("authenticated", currentUser);
-
-      response.redirect("/user/:user_id/garden/:garden_id/edit-garden");
-      return null;
-    });
-
     post("/plants/search-name", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
 
@@ -622,16 +613,6 @@ public class App {
       model.put("template", "templates/search-results.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
-
-
-    post("/user/:user_id/garden/:garden_id/plant/:plant_id/remove-garden-plant", (request, response) -> {
-      int id = Integer.parseInt(request.params("user_id"));
-      User currentUser = User.findById(id);
-      request.session().attribute("authenticated", currentUser);
-
-      response.redirect("/user/:user_id/garden/:garden_id/edit-garden");
-      return null;
-    });
 
 
     post("/user/:user_id/garden/:garden_id/delete", (request, response) -> {
@@ -708,7 +689,6 @@ public class App {
         Plant companion = Plant.findById(intId);
         mainPlant.addCompanion(companion);
       }
-
 
       response.redirect("/user/" + id + "/admin");
       return null;

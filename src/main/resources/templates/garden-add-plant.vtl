@@ -15,6 +15,11 @@ $currentGarden.getName()
 	#foreach($plant in $plants)
 		<label for="$plant.getLatinName().replace(' ', '')">$plant.getName()</label>
 		<input id="$plant.getLatinName().replace(' ', '')" type="radio" name="plant" value="$plant.getId()">
+			<div class="intitially-hidden">
+				#foreach($companion in $plant.getCompanions())
+					<p>$companion.getName()</p>
+				#end
+			</div>
 	#end
 	<button type="submit" id="add-plant">Add this plant</button>
 	<p>at $nextPositionNorth degrees North and $nextPositionWest degrees West in your garden plan grid.</p>
