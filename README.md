@@ -1,12 +1,11 @@
-# java_template
-
+# garden plotter
 
 
 #### By _**Paul Hess**_
 
 ## Description
 
-template for basic student project file structure
+A visual planning tool for designing garden spaces.
 
 ## Setup/Installation Requirements
 
@@ -17,11 +16,11 @@ template for basic student project file structure
 ```
 $ postgres
 ```
-* _Open a new tab in terminal and create the `repo_db_name` database:_
+* _Open a new tab in terminal and create the `three_d_garden` database:_
 ```
 $ psql
-$ CREATE DATABASE repo_db_name;
-$ psql repo_db_name < repo_db_name.sql
+$ CREATE DATABASE three_d_garden;
+$ psql three_d_garden < three_d_garden.sql
 ```
 * _Navigate back to the directory where this repository has been cloned and run gradle:_
 ```
@@ -45,6 +44,7 @@ _To contact, leave a comment on Github._
 * _Gradle_
 * _Spark_
 * _SQL_
+* _JBCrypt _from mindrot.org_
 
 ### License
 
