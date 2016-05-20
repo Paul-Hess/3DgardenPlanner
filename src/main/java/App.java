@@ -188,8 +188,16 @@ public class App {
       int gardenId = Integer.parseInt(request.params("garden_id"));
       Garden currentGarden = Garden.findById(gardenId);
       model.put("currentGarden", currentGarden);
+      int degrees = currentGarden.getWidth() * currentGarden.getLength();
       int nextPositionNorth = 0;
       int nextPositionWest = 0;
+      String cssPositionNorth =  String.format("%dpx", nextPositionNorth * 10);
+      String cssPositionWest = String.format("%dpx", nextPositionWest * 10);
+      String gridWidth = String.format("%dpx", 400/currentGarden.getWidth());
+      model.put("degrees", degrees); 
+      model.put("gridWidth", gridWidth);
+      model.put("cssPositionWest", cssPositionWest);
+      model.put("cssPositionNorth", cssPositionNorth);
 
       if(currentGarden.getPlants().size() == 0) {
         model.put("plants", Plant.all());
@@ -198,8 +206,12 @@ public class App {
       } else if (currentGarden.checkAvailableGround() > 0) {
         nextPositionNorth = currentGarden.getNextPositionNorth();
         nextPositionWest = currentGarden.getNextPositionWest();
+        cssPositionNorth =  String.format("%dpx", nextPositionNorth * 10);
+        cssPositionWest = String.format("%dpx", nextPositionWest * 10);
         model.put("nextPositionNorth", nextPositionNorth);
         model.put("nextPositionWest", nextPositionWest);
+        model.put("cssPositionWest", cssPositionWest);
+        model.put("cssPositionNorth", cssPositionNorth);
         model.put("plants", currentGarden.findByAvailableGround(currentGarden.checkAvailableGround()));
       }
 

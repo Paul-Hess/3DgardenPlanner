@@ -1,3 +1,4 @@
+<div class="user-nav">
 	<form action="/user/$currentUser.getId()/log-out" method="post">
 	<button type="submit" id="logout-button">Log Out</button>
 </form>
@@ -6,12 +7,12 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
-
+</div>
 
 $currentGarden.getName()
 
 <h3>Add plants to your garden here:</h3>
-<form action="/user/$currentUser.getId()/garden/$currentGarden.getId()/add-plant" method="post">
+<form id="garden-add-plant" action="/user/$currentUser.getId()/garden/$currentGarden.getId()/add-plant" method="post">
 	#foreach($plant in $plants)
 		<label for="$plant.getLatinName().replace(' ', '')">$plant.getName()</label>
 		<input id="$plant.getLatinName().replace(' ', '')" type="radio" name="plant" value="$plant.getId()">
@@ -24,3 +25,33 @@ $currentGarden.getName()
 	<button type="submit" id="add-plant">Add this plant</button>
 	<p>at $nextPositionNorth degrees North and $nextPositionWest degrees West in your garden plan grid.</p>
 </form>
+
+<div class="garden-grid">
+	#foreach($degree in [1..$degrees])
+		<div class="grid-box" >&nbsp;</div>
+	#end
+	<div id="position" >current planting start position</div>
+</div>
+
+<style>
+	.grid-box {
+		width: $gridWidth;
+		height: $gridWidth;
+	}
+
+	#position {
+		height: $gridWidth;
+		width: $gridWidth;
+	}
+</style>
+
+<script>
+
+$(function() {
+	var left = "$cssPositionWest";
+	var top = "$cssPositionNorth";
+	$("#position").css("top", top);
+	$("#position").css("left", left);
+})
+
+</script>

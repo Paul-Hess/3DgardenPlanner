@@ -371,6 +371,9 @@ html {
 /**
  * Basic styles for links
  */
+h3 {
+  text-align: center; }
+
 /**
  * Basic typography style for copy text
  */
@@ -439,26 +442,41 @@ form {
   align-items: center;
   justify-content: space-around; }
 
-.sign-up {
-  width: 50vw;
-  height: 50vw;
+.sign-up, #new-garden-form {
+  width: 60vw;
+  height: 60vh;
   margin: 0 auto;
   background: url("./img/planting.jpg");
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   border-radius: 4px; }
-  .sign-up form {
+  .sign-up form, #new-garden-form form {
     height: 40vh;
     width: 40vw;
     margin: 5vh auto; }
-  .sign-up label {
-    background: rgba(255, 255, 255, 0.4);
-    color: #fff; }
+  .sign-up label, #new-garden-form label {
+    background: rgba(255, 255, 255, 0.6);
+    color: black; }
+
+#new-garden-form {
+  height: 60vh; }
+
+.search-form form {
+  color: white; }
+  .search-form form button {
+    width: 100%; }
+  .search-form form input {
+    color: black; }
+
+#garden-add-plant {
+  width: 40vw;
+  height: 100vh;
+  float: right; }
 
 .header-main {
-  background-color: #232023;
   color: #fff;
-  width: 100vw; }
+  width: 100vw;
+  background: #241F0C; }
   .header-main h3 {
     margin: 0 auto;
     font-size: 1.8em;
@@ -477,7 +495,28 @@ form {
     transform: scale(1.2);
     color: white; }
 
+.user-nav a, .user-nav button {
+  padding: 1em;
+  border: 2px solid #fff;
+  font-size: 1.5em;
+  border-radius: 4px;
+  color: #fff;
+  text-align: center;
+  background: transparent;
+  text-decoration: none; }
+  .user-nav a:hover, .user-nav button:hover {
+    background: #fff;
+    color: black; }
+
+.user-nav {
+  background: #241F0C;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding-top: 4em; }
+
 .navigation {
+  background: #241F0C;
   display: flex;
   justify-content: space-between;
   width: 30vw;
@@ -490,34 +529,84 @@ form {
   background-size: 100%;
   background-repeat: no-repeat; }
 
+button {
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: .5em;
+  border: 3px solid #fff;
+  border-radius: 4px; }
+  button:hover {
+    color: black;
+    background: white;
+    box-shadow: -2px -2px 3px 3px #fff; }
+
 .all-plants {
   display: flex;
   flex-wrap: wrap;
   background: #241F0C;
-  justify-content: space-around;
-  height: 150vw; }
+  justify-content: space-around; }
   .all-plants a.plant-link {
     border: 2px solid #fff;
+    display: flex;
+    flex-direction: column;
     border-radius: 4px;
     text-decoration: none;
-    width: 33vw;
-    height: 33vw; }
+    width: 33vw; }
     .all-plants a.plant-link .plants-detail {
       color: white;
       background: #241F0C;
       width: 100%;
-      display: flex;
       flex-direction: column;
+      display: flex;
       align-items: center;
       justify-content: space-between; }
       .all-plants a.plant-link .plants-detail h3, .all-plants a.plant-link .plants-detail h4, .all-plants a.plant-link .plants-detail p {
-        width: 90%;
         border: 1px solid #fff; }
 
 .img-wrapper {
-  height: 15vw; }
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; }
   .img-wrapper img {
-    width: 15vw;
-    height: 15vw; }
+    width: 33%;
+    height: auto; }
+
+#search-header {
+  background: #241F0C;
+  margin: 0;
+  padding: 0;
+  color: white;
+  padding-top: 3em;
+  text-align: center; }
+
+.search {
+  display: flex;
+  justify-content: space-around;
+  background: #241F0C; }
+  .search .search-form {
+    flex: .2 .2 20%; }
+  .search h3 {
+    text-align: center;
+    color: #fff; }
+
+.garden-grid {
+  position: absolute;
+  width: 412px;
+  height: 412px;
+  top: 40vh;
+  left: 0vw;
+  border: 1px solid white;
+  background: url("./img/soil-feather.jpg");
+  background-size: cover;
+  background-repeat: no-repeat; }
+  .garden-grid .grid-box {
+    float: left;
+    border: 1px solid white; }
+  .garden-grid #position {
+    position: relative;
+    background: rgba(0, 128, 0, 0.6);
+    color: #fff; }
 
 /*# sourceMappingURL=app.css.map */

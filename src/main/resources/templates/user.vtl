@@ -1,3 +1,4 @@
+<div class="user-nav">
 <form action="/user/$currentUser.getId()/log-out" method="post">
 	<button type="submit" id="logout-button">Log Out</button>
 </form>
@@ -7,6 +8,7 @@
 #if($currentUser.isAdmin())
 <a href="/user/$currentUser.getId()/admin">Administration</a>
 #end	
+</div>
 
 	<div class="user-container">
 		<div class="user-info">
@@ -16,20 +18,23 @@
 		</div>
 	</div>
 
-#foreach($plant in $myPlants)
-	<div class="my-plants">
-		<div class="plants-detail">
-			<a class="plant-link" href="/plant/$plant.getId()">	
-				<h3>$plant.getName()</h3>
-				<h4>$plant.getLatinName()</h4>
-				<p>$plant.getZone()</p>
-				<p>$plant.getHeight()</p>
-				<p>$plant.getWidth()</p>
-				<p>$plant.getSeason()</p>
-				<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
-			</a>
+<div class="users-plants">
+	#foreach($plant in $myPlants)
+		<div class="my-plants">
+			<div class="plants-detail">
+				<a class="plant-link" href="/plant/$plant.getId()">	
+					<h3>$plant.getName()</h3>
+					<h4>$plant.getLatinName()</h4>
+					<p>$plant.getZone()</p>
+					<p>$plant.getHeight()</p>
+					<p>$plant.getWidth()</p>
+					<p>$plant.getSeason()</p>
+					<img src="/img/$plant.getIcon()" alt="$plant.getName() image">
+				</a>
+			</div>
 		</div>
-	</div>
-#end
+	#end
+	
+</div>
 
 
