@@ -471,12 +471,16 @@ form {
 #garden-add-plant {
   width: 40vw;
   height: 100vh;
-  float: right; }
+  float: right;
+  background: #241F0C;
+  color: white; }
 
 .header-main {
   color: #fff;
   width: 100vw;
-  background: #241F0C; }
+  background: #241F0C;
+  margin: 0;
+  padding: 0; }
   .header-main h3 {
     margin: 0 auto;
     font-size: 1.8em;
@@ -527,7 +531,13 @@ form {
   height: 100vh;
   width: 100vw;
   background-size: 100%;
-  background-repeat: no-repeat; }
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0; }
+  .home p {
+    color: #fff;
+    font-size: 2em;
+    text-align: center; }
 
 button {
   border: none;

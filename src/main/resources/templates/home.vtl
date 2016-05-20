@@ -1,12 +1,18 @@
 <div class="home">
+
 	#if($authenticated)
-	<form action="/user/$currentUser.getId()/log-out" method="post">
-		<button type="submit" id="logout-button">Log Out</button>
-	</form>
-	<a href="/user/$currentUser.getId()">My Profile</a>
-	<a href="/user/$currentUser.getId()/gardens">My Gardens</a>
-		#if($currentUser.isAdmin())
-		<a href="/user/$currentUser.getId()/admin">Administration</a>
-		#end	
-	#end	
+	<div class="user-nav">
+		<form action="/user/$currentUser.getId()/log-out" method="post">
+			<button type="submit" id="logout-button">Log Out</button>
+		</form>
+		<a href="/user/$currentUser.getId()">My Profile</a>
+		<a href="/user/$currentUser.getId()/gardens">My Gardens</a>
+			#if($currentUser.isAdmin())
+			<a href="/user/$currentUser.getId()/admin">Administration</a>	
+			#end	
+	</div>
+	#end
+
+	<p>A visual planning tool for designing garden spaces.
+	Join the gardening community today. Create an account at the link above.</p>	
 </div>

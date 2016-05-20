@@ -11,8 +11,10 @@
 
 $currentGarden.getName()
 
-<h3>Add plants to your garden here:</h3>
 <form id="garden-add-plant" action="/user/$currentUser.getId()/garden/$currentGarden.getId()/add-plant" method="post">
+<h3>Add plants to your garden here:</h3>
+	<button type="submit" id="add-plant">Add this plant</button>
+	<p>at $nextPositionNorth degrees North and $nextPositionWest degrees West in your garden plan grid.</p>
 	#foreach($plant in $plants)
 		<label for="$plant.getLatinName().replace(' ', '')">$plant.getName()</label>
 		<input id="$plant.getLatinName().replace(' ', '')" type="radio" name="plant" value="$plant.getId()">
@@ -22,8 +24,6 @@ $currentGarden.getName()
 				#end
 			</div>
 	#end
-	<button type="submit" id="add-plant">Add this plant</button>
-	<p>at $nextPositionNorth degrees North and $nextPositionWest degrees West in your garden plan grid.</p>
 </form>
 
 <div class="garden-grid">
