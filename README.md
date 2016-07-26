@@ -30,7 +30,7 @@ $ gradle run
 
 ## Known Bugs
 
-_No current known bugs._
+
 
 ## Support and contact details
 
